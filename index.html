@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CrewFinder | Find Your Next Crew</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #10212b;
+            background: #f5f8fa;
+        }
+
+        header {
+            background: white;
+            border-bottom: 1px solid #e1e8ec;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: #1687c9;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #334b58;
+            margin-left: 25px;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            color: #1687c9;
+        }
+
+        .hero {
+            min-height: 620px;
+            padding: 90px 8%;
+            display: flex;
+            align-items: center;
+            background:
+                linear-gradient(90deg, rgba(8,35,49,0.92), rgba(8,35,49,0.45)),
+                url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=85");
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        .hero-content {
+            max-width: 700px;
+        }
+
+        .hero h1 {
+            font-size: clamp(45px, 7vw, 78px);
+            line-height: 0.95;
+            margin-bottom: 25px;
+            letter-spacing: -3px;
+        }
+
+        .hero h1 span {
+            color: #53c8ff;
+        }
+
+        .hero p {
+            font-size: 21px;
+            line-height: 1.5;
+            max-width: 600px;
+            color: #e6f3f8;
+            margin-bottom: 35px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .primary {
+            background: #19a9ed;
+            color: white;
+        }
+
+        .primary:hover {
+            background: #0b8ccc;
+        }
+
+        .secondary {
+            border: 2px solid white;
+            color: white;
+        }
+
+        .secondary:hover {
+            background: white;
+            color: #10212b;
+        }
+
+        section {
+            padding: 80px 8%;
+        }
+
+        .section-title {
+            text-align: center;
+            max-width: 700px;
+            margin: auto auto 50px;
+        }
+
+        .section-title h2 {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: #607681;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 32px;
+            border-radius: 14px;
+            border: 1px solid #e1e8ec;
+            box-shadow: 0 8px 30px rgba(15, 40, 50, 0.05);
+        }
+
+        .icon {
+            font-size: 35px;
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: #607681;
+            line-height: 1.6;
+        }
+
+        .logbook {
+            background: #10212b;
+            color: white;
+        }
+
+        .logbook-content {
+            max-width: 1050px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .logbook h2 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .logbook p {
+            color: #bdd0d9;
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat {
+            background: #183440;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 32px;
+            margin-bottom: 5px;
+            color: #53c8ff;
+        }
+
+        .stat span {
+            color: #bdd0d9;
+        }
+
+        footer {
+            background: #07161d;
+            color: #91aab5;
+            text-align: center;
+            padding: 30px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 800px) {
+            .cards,
+            .logbook-content {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .hero {
+                padding: 70px 7%;
+            }
+
+            .hero h1 {
+                font-size: 52px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Crew<span>Finder</span></div>
+
+    <nav>
+        <a href="#how">How it works</a>
+        <a href="#logbook">Logbook</a>
+        <a href="#">Find Crew</a>
+        <a href="#">Create Profile</a>
+    </nav>
+</header>
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>
+            Find your next<br>
+            <span>crew.</span>
+        </h1>
+
+        <p>
+            Connect sailors, yacht owners and watersports enthusiasts.
+            Find the right people for your next adventure — and build
+            your sailing CV along the way.
+        </p>
+
+        <div class="buttons">
+            <a class="button primary" href="#">Create a free profile</a>
+            <a class="button secondary" href="#">Find crew</a>
+        </div>
+
+    </div>
+
+</section>
+
+<section id="how">
+
+    <div class="section-title">
+
+        <h2>Built for people who live on the water.</h2>
+
+        <p>
+            CrewFinder makes it easier to find the right crew,
+            discover sailing opportunities and keep track of your
+            time on the water.
+        </p>
+
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="icon">👤</div>
+
+            <h3>Create your profile</h3>
+
+            <p>
+                Build a free sailing profile showing your experience,
+                qualifications, boats, skills and the type of sailing
+                you're looking for.
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <div class="icon">🔎</div>
+
+            <h3>Find the right crew</h3>
+
+            <p>
+                Yacht owners and skippers can search and filter profiles
+                to find people with the experience and skills they need.
+            </p>
+
+        </div>
+
+        <div class="card">
+
+            <div class="icon">⛵</div>
+
+            <h3>Log your voyages</h3>
+
+            <p>
+                Keep a digital record of your sailing and watch your
+                experience, miles and voyages build over time.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="logbook" id="logbook">
+
+    <div class="logbook-content">
+
+        <div>
+
+            <h2>Your sailing life. All in one place.</h2>
+
+            <p>
+                The CrewFinder Logbook turns every voyage into part of
+                your sailing CV. Record where you've sailed, what you've
+                sailed, your role, distance and type of sailing.
+            </p>
+
+            <br>
+
+            <p>
+                Premium members will be able to build a detailed history
+                of their time on the water, with statistics and an
+                automatically calculated nautical-mile total.
+            </p>
+
+        </div>
+
+        <div class="stats">
+
+            <div class="stat">
+                <strong>2,486</strong>
+                <span>nautical miles</span>
+            </div>
+
+            <div class="stat">
+                <strong>37</strong>
+                <span>voyages</span>
+            </div>
+
+            <div class="stat">
+                <strong>18</strong>
+                <span>offshore trips</span>
+            </div>
+
+            <div class="stat">
+                <strong>12</strong>
+                <span>racing voyages</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+
+    © 2026 CrewFinder — Find your next crew.
+
+</footer>
+
+</body>
+</html>
