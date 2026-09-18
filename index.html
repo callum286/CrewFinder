@@ -1,265 +1,437 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>CrewFinder | Find Your Next Crew</title>
+<title>CrewFinder | Find Your Next Crew</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            color: #10212b;
-            background: #f5f8fa;
-        }
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #10212b;
+    background: #f5f8fa;
+}
 
-        header {
-            background: white;
-            border-bottom: 1px solid #e1e8ec;
-            padding: 18px 6%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+header {
+    background: white;
+    border-bottom: 1px solid #e1e8ec;
+    padding: 18px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
 
-        .logo {
-            font-size: 25px;
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
+.logo {
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    cursor: pointer;
+}
 
-        .logo span {
-            color: #1687c9;
-        }
+.logo span {
+    color: #1687c9;
+}
 
-        nav a {
-            text-decoration: none;
-            color: #334b58;
-            margin-left: 25px;
-            font-size: 15px;
-        }
+nav a {
+    text-decoration: none;
+    color: #334b58;
+    margin-left: 25px;
+    font-size: 15px;
+    cursor: pointer;
+}
 
-        nav a:hover {
-            color: #1687c9;
-        }
+nav a:hover {
+    color: #1687c9;
+}
 
-        .hero {
-            min-height: 620px;
-            padding: 90px 8%;
-            display: flex;
-            align-items: center;
-            background:
-                linear-gradient(90deg, rgba(8,35,49,0.92), rgba(8,35,49,0.45)),
-                url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=85");
-            background-size: cover;
-            background-position: center;
-            color: white;
-        }
+.hero {
+    min-height: 620px;
+    padding: 90px 8%;
+    display: flex;
+    align-items: center;
+    background:
+        linear-gradient(90deg, rgba(8,35,49,0.92), rgba(8,35,49,0.45)),
+        url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=85");
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
 
-        .hero-content {
-            max-width: 700px;
-        }
+.hero-content {
+    max-width: 700px;
+}
 
-        .hero h1 {
-            font-size: clamp(45px, 7vw, 78px);
-            line-height: 0.95;
-            margin-bottom: 25px;
-            letter-spacing: -3px;
-        }
+.hero h1 {
+    font-size: clamp(45px, 7vw, 78px);
+    line-height: 0.95;
+    margin-bottom: 25px;
+    letter-spacing: -3px;
+}
 
-        .hero h1 span {
-            color: #53c8ff;
-        }
+.hero h1 span {
+    color: #53c8ff;
+}
 
-        .hero p {
-            font-size: 21px;
-            line-height: 1.5;
-            max-width: 600px;
-            color: #e6f3f8;
-            margin-bottom: 35px;
-        }
+.hero p {
+    font-size: 21px;
+    line-height: 1.5;
+    max-width: 600px;
+    color: #e6f3f8;
+    margin-bottom: 35px;
+}
 
-        .buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
+.buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
 
-        .button {
-            display: inline-block;
-            padding: 15px 25px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 16px;
-        }
+.button {
+    display: inline-block;
+    padding: 15px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+}
 
-        .primary {
-            background: #19a9ed;
-            color: white;
-        }
+.primary {
+    background: #19a9ed;
+    color: white;
+}
 
-        .primary:hover {
-            background: #0b8ccc;
-        }
+.primary:hover {
+    background: #0b8ccc;
+}
 
-        .secondary {
-            border: 2px solid white;
-            color: white;
-        }
+.secondary {
+    border: 2px solid white;
+    color: white;
+    background: transparent;
+}
 
-        .secondary:hover {
-            background: white;
-            color: #10212b;
-        }
+.secondary:hover {
+    background: white;
+    color: #10212b;
+}
 
-        section {
-            padding: 80px 8%;
-        }
+section {
+    padding: 80px 8%;
+}
 
-        .section-title {
-            text-align: center;
-            max-width: 700px;
-            margin: auto auto 50px;
-        }
+.section-title {
+    text-align: center;
+    max-width: 700px;
+    margin: auto auto 50px;
+}
 
-        .section-title h2 {
-            font-size: 40px;
-            margin-bottom: 15px;
-        }
+.section-title h2 {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
 
-        .section-title p {
-            color: #607681;
-            font-size: 18px;
-            line-height: 1.5;
-        }
+.section-title p {
+    color: #607681;
+    font-size: 18px;
+    line-height: 1.5;
+}
 
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            max-width: 1100px;
-            margin: auto;
-        }
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    max-width: 1100px;
+    margin: auto;
+}
 
-        .card {
-            background: white;
-            padding: 32px;
-            border-radius: 14px;
-            border: 1px solid #e1e8ec;
-            box-shadow: 0 8px 30px rgba(15, 40, 50, 0.05);
-        }
+.card {
+    background: white;
+    padding: 32px;
+    border-radius: 14px;
+    border: 1px solid #e1e8ec;
+    box-shadow: 0 8px 30px rgba(15, 40, 50, 0.05);
+}
 
-        .icon {
-            font-size: 35px;
-            margin-bottom: 20px;
-        }
+.icon {
+    font-size: 35px;
+    margin-bottom: 20px;
+}
 
-        .card h3 {
-            font-size: 22px;
-            margin-bottom: 12px;
-        }
+.card h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+}
 
-        .card p {
-            color: #607681;
-            line-height: 1.6;
-        }
+.card p {
+    color: #607681;
+    line-height: 1.6;
+}
 
-        .logbook {
-            background: #10212b;
-            color: white;
-        }
+.logbook {
+    background: #10212b;
+    color: white;
+}
 
-        .logbook-content {
-            max-width: 1050px;
-            margin: auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-        }
+.logbook-content {
+    max-width: 1050px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
 
-        .logbook h2 {
-            font-size: 42px;
-            margin-bottom: 20px;
-        }
+.logbook h2 {
+    font-size: 42px;
+    margin-bottom: 20px;
+}
 
-        .logbook p {
-            color: #bdd0d9;
-            line-height: 1.7;
-            font-size: 17px;
-        }
+.logbook p {
+    color: #bdd0d9;
+    line-height: 1.7;
+    font-size: 17px;
+}
 
-        .stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
+.stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
 
-        .stat {
-            background: #183440;
-            padding: 25px;
-            border-radius: 12px;
-        }
+.stat {
+    background: #183440;
+    padding: 25px;
+    border-radius: 12px;
+}
 
-        .stat strong {
-            display: block;
-            font-size: 32px;
-            margin-bottom: 5px;
-            color: #53c8ff;
-        }
+.stat strong {
+    display: block;
+    font-size: 32px;
+    margin-bottom: 5px;
+    color: #53c8ff;
+}
 
-        .stat span {
-            color: #bdd0d9;
-        }
+.stat span {
+    color: #bdd0d9;
+}
 
-        footer {
-            background: #07161d;
-            color: #91aab5;
-            text-align: center;
-            padding: 30px;
-            font-size: 14px;
-        }
+/* PROFILE PAGE */
 
-        @media (max-width: 800px) {
-            .cards,
-            .logbook-content {
-                grid-template-columns: 1fr;
-            }
+.profile-page {
+    display: none;
+    padding: 60px 6%;
+    min-height: 100vh;
+    background: #f5f8fa;
+}
 
-            nav {
-                display: none;
-            }
+.profile-container {
+    max-width: 900px;
+    margin: auto;
+}
 
-            .hero {
-                padding: 70px 7%;
-            }
+.profile-heading {
+    margin-bottom: 35px;
+}
 
-            .hero h1 {
-                font-size: 52px;
-            }
-        }
-    </style>
+.profile-heading h1 {
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+.profile-heading p {
+    color: #607681;
+    font-size: 18px;
+}
+
+.form-card {
+    background: white;
+    padding: 35px;
+    border-radius: 16px;
+    border: 1px solid #e1e8ec;
+    margin-bottom: 25px;
+}
+
+.form-card h2 {
+    margin-bottom: 8px;
+    font-size: 24px;
+}
+
+.form-card > p {
+    color: #71858f;
+    margin-bottom: 25px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #ccd8de;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    background: white;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #19a9ed;
+    box-shadow: 0 0 0 3px rgba(25,169,237,0.1);
+}
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: #f5f8fa;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.checkbox input {
+    width: auto;
+}
+
+.contact-box {
+    background: #eef8fd;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.contact-box p {
+    color: #506b78;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.back-button {
+    background: #e8eef1;
+    color: #253943;
+}
+
+.success-message {
+    display: none;
+    background: #e8f8ee;
+    border: 1px solid #b8e5c7;
+    padding: 20px;
+    border-radius: 10px;
+    color: #20633a;
+    margin-bottom: 20px;
+}
+
+footer {
+    background: #07161d;
+    color: #91aab5;
+    text-align: center;
+    padding: 30px;
+    font-size: 14px;
+}
+
+@media (max-width: 800px) {
+
+    .cards,
+    .logbook-content,
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .checkbox-group {
+        grid-template-columns: 1fr;
+    }
+
+    nav {
+        display: none;
+    }
+
+    .hero {
+        padding: 70px 7%;
+    }
+
+    .hero h1 {
+        font-size: 52px;
+    }
+
+    .profile-heading h1 {
+        font-size: 36px;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <header>
-    <div class="logo">Crew<span>Finder</span></div>
+
+    <div class="logo" onclick="showHome()">
+        Crew<span>Finder</span>
+    </div>
 
     <nav>
+        <a onclick="showHome()">Home</a>
         <a href="#how">How it works</a>
+        <a onclick="showProfile()">Create Profile</a>
         <a href="#logbook">Logbook</a>
-        <a href="#">Find Crew</a>
-        <a href="#">Create Profile</a>
     </nav>
+
 </header>
+
+
+<!-- HOME PAGE -->
+
+<div id="homePage">
 
 <section class="hero">
 
@@ -277,13 +449,19 @@
         </p>
 
         <div class="buttons">
-            <a class="button primary" href="#">Create a free profile</a>
-            <a class="button secondary" href="#">Find crew</a>
+            <button class="button primary" onclick="showProfile()">
+                Create a free profile
+            </button>
+
+            <button class="button secondary">
+                Find crew
+            </button>
         </div>
 
     </div>
 
 </section>
+
 
 <section id="how">
 
@@ -302,7 +480,6 @@
     <div class="cards">
 
         <div class="card">
-
             <div class="icon">👤</div>
 
             <h3>Create your profile</h3>
@@ -312,11 +489,10 @@
                 qualifications, boats, skills and the type of sailing
                 you're looking for.
             </p>
-
         </div>
 
-        <div class="card">
 
+        <div class="card">
             <div class="icon">🔎</div>
 
             <h3>Find the right crew</h3>
@@ -325,11 +501,10 @@
                 Yacht owners and skippers can search and filter profiles
                 to find people with the experience and skills they need.
             </p>
-
         </div>
 
-        <div class="card">
 
+        <div class="card">
             <div class="icon">⛵</div>
 
             <h3>Log your voyages</h3>
@@ -338,12 +513,12 @@
                 Keep a digital record of your sailing and watch your
                 experience, miles and voyages build over time.
             </p>
-
         </div>
 
     </div>
 
 </section>
+
 
 <section class="logbook" id="logbook">
 
@@ -362,12 +537,14 @@
             <br>
 
             <p>
-                Premium members will be able to build a detailed history
-                of their time on the water, with statistics and an
-                automatically calculated nautical-mile total.
+                Premium members will eventually be able to build a
+                detailed history of their time on the water, with
+                statistics and an automatically calculated nautical-mile
+                total.
             </p>
 
         </div>
+
 
         <div class="stats">
 
@@ -397,11 +574,463 @@
 
 </section>
 
+</div>
+
+
+<!-- CREATE PROFILE PAGE -->
+
+<div id="profilePage" class="profile-page">
+
+    <div class="profile-container">
+
+        <div class="profile-heading">
+
+            <h1>Create your profile</h1>
+
+            <p>
+                Build your free CrewFinder sailing profile.
+                Owners will be able to discover sailors based on
+                their experience and preferences.
+            </p>
+
+        </div>
+
+
+        <div id="successMessage" class="success-message">
+
+            <strong>Profile created!</strong>
+
+            <br>
+
+            Your CrewFinder profile has been created successfully.
+            We'll connect this to the CrewFinder database next.
+
+        </div>
+
+
+        <!-- BASIC INFORMATION -->
+
+        <div class="form-card">
+
+            <h2>About you</h2>
+
+            <p>Tell other members who you are.</p>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>First name *</label>
+
+                    <input
+                        type="text"
+                        id="firstName"
+                        placeholder="e.g. Callum"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Last name *</label>
+
+                    <input
+                        type="text"
+                        id="lastName"
+                        placeholder="e.g. Aldridge"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Location *</label>
+
+                    <input
+                        type="text"
+                        id="location"
+                        placeholder="e.g. Chichester"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Age</label>
+
+                    <input
+                        type="number"
+                        id="age"
+                        min="13"
+                        max="100"
+                        placeholder="Age"
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label>Profile photo</label>
+
+                    <input
+                        type="file"
+                        id="photo"
+                        accept="image/*"
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label>About me</label>
+
+                    <textarea
+                        id="about"
+                        placeholder="Tell owners a little about yourself, your personality and what you enjoy about being on the water..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- EXPERIENCE -->
+
+        <div class="form-card">
+
+            <h2>Watersports experience</h2>
+
+            <p>
+                Select everything you've got experience in.
+            </p>
+
+
+            <div class="checkbox-group">
+
+                <label class="checkbox">
+                    <input type="checkbox" value="Dinghy sailing">
+                    Dinghy sailing
+                </label>
+
+                <label class="checkbox">
+                    <input type="checkbox" value="Yacht sailing">
+                    Yacht sailing
+                </label>
+
+                <label class="checkbox">
+                    <input type="checkbox" value="Offshore sailing">
+                    Offshore sailing
+                </label>
+
+                <label class="checkbox">
+                    <input type="checkbox" value="Racing">
+                    Racing
+                </label>
+
+                <label class="checkbox">
+                    <input type="checkbox" value="Windsurfing">
+                    Windsurfing
+                </label>
+
+                <label class="checkbox">
+                    <input type="checkbox" value="Wingfoiling">
+                    Wingfoiling
+                </label>
+
+                <label class="checkbox">
+                    <input type="checkbox" value="Foiling">
+                    Foiling
+                </label>
+
+                <label class="checkbox">
+                    <input type="checkbox" value="Cruising">
+                    Cruising
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUALIFICATIONS -->
+
+        <div class="form-card">
+
+            <h2>Qualifications & experience</h2>
+
+            <p>
+                Add qualifications, experience and boats you've sailed.
+            </p>
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+
+                    <label>Qualifications</label>
+
+                    <input
+                        type="text"
+                        placeholder="e.g. RYA Powerboat Level 2, First Aid, Day Skipper"
+                    >
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label>Boats / fleets sailed</label>
+
+                    <input
+                        type="text"
+                        placeholder="e.g. 29er, ILCA 6, RS Tera, RS Feva, J/70"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Years sailing</label>
+
+                    <input
+                        type="number"
+                        min="0"
+                        placeholder="e.g. 8"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Racing experience</label>
+
+                    <select>
+
+                        <option value="">Select</option>
+                        <option>None</option>
+                        <option>Club racing</option>
+                        <option>Regional racing</option>
+                        <option>National racing</option>
+                        <option>International racing</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PREFERENCES -->
+
+        <div class="form-card">
+
+            <h2>What are you looking for?</h2>
+
+            <p>
+                Tell yacht owners what kind of sailing you'd like to do.
+            </p>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>Preferred role</label>
+
+                    <select>
+
+                        <option>Select a role</option>
+                        <option>General crew</option>
+                        <option>Racing crew</option>
+                        <option>Helm</option>
+                        <option>Trimmer</option>
+                        <option>Bow</option>
+                        <option>Navigator</option>
+                        <option>Watch crew</option>
+                        <option>Other</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Preferred sailing</label>
+
+                    <select>
+
+                        <option>Select</option>
+                        <option>Racing</option>
+                        <option>Offshore</option>
+                        <option>Cruising</option>
+                        <option>Delivery sailing</option>
+                        <option>Day sailing</option>
+                        <option>Anything!</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label>Availability</label>
+
+                    <input
+                        type="text"
+                        placeholder="e.g. Weekends, school holidays, flexible"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTACT -->
+
+        <div class="form-card">
+
+            <h2>Contact preferences</h2>
+
+            <p>
+                Choose how you'd like potential crew opportunities
+                to contact you.
+            </p>
+
+            <div class="contact-box">
+
+                <p>
+                    Your contact information should only be visible
+                    according to your chosen privacy settings.
+                </p>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label>Preferred contact method</label>
+
+                        <select id="contactMethod">
+
+                            <option>Email</option>
+                            <option>Phone</option>
+                            <option>Instagram DM</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Contact detail</label>
+
+                        <input
+                            type="text"
+                            id="contactDetail"
+                            placeholder="Email, phone number or Instagram"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SUBMIT -->
+
+        <div class="form-actions">
+
+            <button
+                class="button back-button"
+                onclick="showHome()"
+            >
+                Back
+            </button>
+
+            <button
+                class="button primary"
+                onclick="createProfile()"
+            >
+                Create my free profile
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 <footer>
-
     © 2026 CrewFinder — Find your next crew.
-
 </footer>
+
+
+<script>
+
+function showProfile() {
+
+    document.getElementById("homePage").style.display = "none";
+
+    document.getElementById("profilePage").style.display = "block";
+
+    window.scrollTo(0, 0);
+}
+
+
+function showHome() {
+
+    document.getElementById("profilePage").style.display = "none";
+
+    document.getElementById("homePage").style.display = "block";
+
+    window.scrollTo(0, 0);
+}
+
+
+function createProfile() {
+
+    const firstName =
+        document.getElementById("firstName").value;
+
+    const lastName =
+        document.getElementById("lastName").value;
+
+    const location =
+        document.getElementById("location").value;
+
+    if (!firstName || !lastName || !location) {
+
+        alert("Please complete your first name, last name and location.");
+
+        return;
+    }
+
+    document.getElementById("successMessage").style.display = "block";
+
+    window.scrollTo(0, 0);
+}
+
+</script>
 
 </body>
 </html>
