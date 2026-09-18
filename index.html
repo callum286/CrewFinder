@@ -987,49 +987,62 @@ footer {
 
 <script>
 
-function showProfile() {
+const SUPABASE_URL = "https://uaiahxxjvkggexyzzshk.supabase.co/rest/v1/";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhaWFoeHhqdmtnZ2V4eXp6c2hrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk3MzkzNjksImV4cCI6MjEwNTMxNTM2OX0.ULF-QQs7zMk4g7RcIhPNoCDwTIQWLcnaOoPJsqCuKD8";
 
-    document.getElementById("homePage").style.display = "none";
+async function createProfile() {
 
-    document.getElementById("profilePage").style.display = "block";
-
-    window.scrollTo(0, 0);
-}
-
-
-function showHome() {
-
-    document.getElementById("profilePage").style.display = "none";
-
-    document.getElementById("homePage").style.display = "block";
-
-    window.scrollTo(0, 0);
-}
-
-
-function createProfile() {
-
-    const firstName =
-        document.getElementById("firstName").value;
-
-    const lastName =
-        document.getElementById("lastName").value;
-
-    const location =
-        document.getElementById("location").value;
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
+    const location = document.getElementById("location").value.trim();
+    const age = document.getElementById("age").value;
 
     if (!firstName || !lastName || !location) {
-
         alert("Please complete your first name, last name and location.");
+        return;
+    }
 
+    const response = await fetch(
+        SUPABASE_URL + "/rest/v1/profiles",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "apikey": SUPABASE_ANON_KEY,
+                "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+                "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({
+                first_name: firstName,
+                last_name: lastName,
+                location: location,
+                age: age ? Number(age) : null
+            })
+        }
+    );
+
+    if (!response.ok) {
+        const error = await response.text();
+        console.error(error);
+        alert("There was a problem creating your profile. Please try again.");
         return;
     }
 
     document.getElementById("successMessage").style.display = "block";
-
     window.scrollTo(0, 0);
 }
 
+function showProfile() {
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("profilePage").style.display = "block";
+    window.scrollTo(0, 0);
+}
+
+function showHome() {
+    document.getElementById("profilePage").style.display = "none";
+    document.getElementById("homePage").style.display = "block";
+    window.scrollTo(0, 0);
+}
 </script>
 
 </body>
