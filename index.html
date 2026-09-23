@@ -1116,13 +1116,27 @@ function showProfile() {
 function showHome() {
 
     document.getElementById("profilePage").style.display = "none";
+    document.getElementById("searchPage").style.display = "none";
+    document.getElementById("loginPage").style.display = "none";
 
     document.getElementById("homePage").style.display = "block";
 
     window.scrollTo(0, 0);
 }
 
+    
+function showProfile() {
 
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("searchPage").style.display = "none";
+    document.getElementById("loginPage").style.display = "none";
+
+    document.getElementById("profilePage").style.display = "block";
+
+    window.scrollTo(0, 0);
+}
+
+    
 /*
 ====================================================
 CREATE PROFILE
