@@ -1103,15 +1103,6 @@ PAGE NAVIGATION
 ====================================================
 */
 
-function showProfile() {
-
-    document.getElementById("homePage").style.display = "none";
-
-    document.getElementById("profilePage").style.display = "block";
-
-    window.scrollTo(0, 0);
-}
-
 
 function showHome() {
 
@@ -1125,13 +1116,29 @@ function showHome() {
 }
 
     
-function showProfile() {
+function showHome() {
 
-    document.getElementById("homePage").style.display = "none";
+    document.getElementById("profilePage").style.display = "none";
     document.getElementById("searchPage").style.display = "none";
     document.getElementById("loginPage").style.display = "none";
 
-    document.getElementById("profilePage").style.display = "block";
+    document.getElementById("homePage").style.display = "block";
+
+    window.scrollTo(0, 0);
+}
+
+
+function showProfile() {
+
+    const homePage = document.getElementById("homePage");
+    const searchPage = document.getElementById("searchPage");
+    const loginPage = document.getElementById("loginPage");
+    const profilePage = document.getElementById("profilePage");
+
+    if (homePage) homePage.style.display = "none";
+    if (searchPage) searchPage.style.display = "none";
+    if (loginPage) loginPage.style.display = "none";
+    if (profilePage) profilePage.style.display = "block";
 
     window.scrollTo(0, 0);
 }
@@ -1449,8 +1456,9 @@ function showLogin() {
     document.getElementById("profilePage").style.display = "none";
     document.getElementById("searchPage").style.display = "none";
     document.getElementById("homePage").style.display = "none";
-}
 
+    window.scrollTo(0, 0);
+}
 async function signUp() {
 
     const email = document.getElementById("authEmail").value.trim();
