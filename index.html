@@ -1293,7 +1293,7 @@ footer {
         <button
             class="button primary"
             id="createButton"
-            onclick="createProfile()"
+            onclick="updateProfile()"
         >
             Create my free profile
         </button>
@@ -2154,7 +2154,213 @@ async function createProfile() {
             "Create my free profile";
     }
 }
+/* ==================================================
+   UPDATE EXISTING PROFILE
+   ================================================== */
 
+async function updateProfile() {
+
+    const accessToken =
+        localStorage.getItem("crewfinder_access_token");
+
+    const userId =
+        localStorage.getItem("crewfinder_user_id");
+
+    const errorMessage =
+        document.getElementById("errorMessage");
+
+    const successMessage =
+        document.getElementById("successMessage");
+
+    const button =
+        document.getElementById("createButton");
+
+
+    if (!accessToken || !userId) {
+
+        errorMessage.textContent =
+            "Please log in before editing your profile.";
+
+        errorMessage.style.display =
+            "block";
+
+        showLogin();
+
+        return;
+    }
+
+
+    const profileData = {
+
+        first_name:
+            document.getElementById("firstName").value.trim(),
+
+        last_name:
+            document.getElementById("lastName").value.trim(),
+
+        location:
+            document.getElementById("location").value.trim(),
+
+        age:
+            document.getElementById("age").value
+                ? Number(document.getElementById("age").value)
+                : null,
+
+        about_me:
+            document.getElementById("about").value.trim() || null,
+
+        qualifications:
+            document.getElementById("qualifications").value.trim() || null,
+
+        boats:
+            document.getElementById("boats").value.trim() || null,
+
+        years_sailing:
+            document.getElementById("yearsSailing").value
+                ? Number(document.getElementById("yearsSailing").value)
+                : null,
+
+        racing_experience:
+            document.getElementById("racingExperience").value || null,
+
+        preferred_role:
+            document.getElementById("preferredRole").value || null,
+
+        preferred_sailing:
+            document.getElementById("preferredSailing").value || null,
+
+        availability:
+            document.getElementById("availability").value.trim() || null,
+
+        contact_method:
+            document.getElementById("contactMethod").value || null,
+
+        contact_detail:
+            document.getElementById("contactDetail").value.trim() || null
+    };
+
+
+    if (
+        !profileData.first_name ||
+        !profileData.last_name ||
+        !profileData.location
+    ) {
+
+        errorMessage.textContent =
+            "Please complete your first name, last name and location.";
+
+        errorMessage.style.display =
+            "block";
+
+        return;
+    }
+
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        "Saving changes...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                "/rest/v1/profiles?user_id=eq." +
+                encodeURIComponent(userId),
+
+                {
+                    method: "PATCH",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "apikey":
+                            SUPABASE_ANON_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            accessToken,
+
+                        "Prefer":
+                            "return=minimal"
+                    },
+
+                    body:
+                        JSON.stringify(profileData)
+                }
+            );
+
+
+        if (!response.ok) {
+
+            const errorText =
+                await response.text();
+
+            console.error(
+                "Supabase error:",
+                errorText
+            );
+
+            errorMessage.textContent =
+                "Supabase error:\n\n" +
+                errorText;
+
+            errorMessage.style.display =
+                "block";
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                "Save changes";
+
+            return;
+        }
+
+
+        successMessage.textContent =
+            "Your profile has been updated successfully!";
+
+        successMessage.style.display =
+            "block";
+
+        errorMessage.style.display =
+            "none";
+
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "Save changes";
+
+
+        window.scrollTo(0, 0);
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        errorMessage.textContent =
+            "Connection error:\n\n" +
+            error.message;
+
+        errorMessage.style.display =
+            "block";
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "Save changes";
+    }
+}
 
 /* ==================================================
    FIND CREW
