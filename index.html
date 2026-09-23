@@ -1323,7 +1323,7 @@ async function createProfile() {
 
                     "Authorization":
                         "Bearer " +
-                        SUPABASE_ANON_KEY,
+                        localStorage.getItem("crewfinder_access_token"),
 
                     "Prefer":
                         "return=minimal"
