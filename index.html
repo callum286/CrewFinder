@@ -1253,48 +1253,50 @@ async function createProfile() {
     The current Supabase table contains these columns.
     */
 
-    const profileData = {
+   const profileData = {
 
-        first_name: firstName,
+    user_id:
+        localStorage.getItem("crewfinder_user_id"),
 
-        last_name: lastName,
+    first_name: firstName,
 
-        location: location,
+    last_name: lastName,
 
-        age: ageValue
-            ? Number(ageValue)
-            : null,
+    location: location,
 
-        about_me: about || null,
+    age: ageValue
+        ? Number(ageValue)
+        : null,
 
-        qualifications:
-            qualifications || null,
+    about_me: about || null,
 
-        boats:
-            boats || null,
+    qualifications:
+        qualifications || null,
 
-        years_sailing:
-            yearsSailing || null,
+    boats:
+        boats || null,
 
-        racing_experience:
-            racingExperience || null,
+    years_sailing:
+        yearsSailing || null,
 
-        preferred_role:
-            preferredRole || null,
+    racing_experience:
+        racingExperience || null,
 
-        preferred_sailing:
-            preferredSailing || null,
+    preferred_role:
+        preferredRole || null,
 
-        availability:
-            availability || null,
+    preferred_sailing:
+        preferredSailing || null,
 
-        contact_method:
-            contactMethod || null,
+    availability:
+        availability || null,
 
-        contact_detail:
-            contactDetail || null
-    };
+    contact_method:
+        contactMethod || null,
 
+    contact_detail:
+        contactDetail || null
+};
 
     /*
     Send the profile to Supabase
