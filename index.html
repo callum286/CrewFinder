@@ -1605,6 +1605,42 @@ function showForgotPassword() {
         alert("Please enter your email address first.");
         return;
     }
+    async function sendPasswordReset(email) {
+
+    const response =
+        await fetch(
+            SUPABASE_URL + "/auth/v1/recover",
+            {
+                method: "POST",
+
+                headers: {
+                    "apikey":
+                        SUPABASE_ANON_KEY,
+
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+                        email: email
+                    })
+            }
+        );
+
+    if (response.ok) {
+
+        alert(
+            "Password reset email sent. Check your inbox."
+        );
+
+    } else {
+
+        alert(
+            "Something went wrong. Please try again."
+        );
+    }
+}
 
     sendPasswordReset(email);
 }
