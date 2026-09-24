@@ -812,7 +812,58 @@ nav a {
 
 </div>
 
+<!-- RESET PASSWORD PAGE -->
 
+<div
+    id="resetPasswordPage"
+    class="profile-page"
+    style="display:none;"
+>
+
+    <div class="profile-container">
+
+        <div class="profile-heading">
+
+            <h1>Reset your password</h1>
+
+            <p>
+                Enter a new password for your CrewFinder account.
+            </p>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>New password</label>
+
+            <input
+                type="password"
+                id="newPassword"
+                placeholder="New password"
+            >
+
+        </div>
+
+        <div class="form-actions">
+
+            <button
+                class="button primary"
+                onclick="updatePassword()"
+            >
+                Reset password
+            </button>
+
+        </div>
+
+        <p
+            id="resetMessage"
+            style="margin-top:20px;"
+        ></p>
+
+    </div>
+
+</div>
+    
 <!-- CREATE PROFILE PAGE -->
 
 <div
