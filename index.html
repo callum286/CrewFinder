@@ -1597,9 +1597,9 @@ function hideAllPages() {
 }
 function checkPasswordReset() {
 
-    const hash = window.location.hash;
+    const params = new URLSearchParams(window.location.search);
 
-    if (hash.includes("type=recovery")) {
+    if (params.get("reset") === "true") {
 
         hideAllPages();
 
@@ -1680,8 +1680,7 @@ async function sendPasswordReset(email) {
 
     const response =
         await fetch(
-            SUPABASE_URL + "/auth/v1/recover",
-            {
+SUPABASE_URL + "/auth/v1/recover?redirect_to=https://crew-finder-roan.vercel.app/?reset=true",            {
                 method: "POST",
 
                 headers: {
