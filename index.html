@@ -1595,7 +1595,17 @@ function hideAllPages() {
 
     document.getElementById("loginPage").style.display = "none";
 }
+function checkPasswordReset() {
 
+    const hash = window.location.hash;
+
+    if (hash.includes("type=recovery")) {
+
+        hideAllPages();
+
+        document.getElementById("resetPasswordPage").style.display = "block";
+    }
+}
 
 function showHome() {
 
@@ -1650,14 +1660,23 @@ function showLogin() {
 }
 function showForgotPassword() {
 
-    const email = document.getElementById("authEmail").value.trim();
+    const email =
+        document.getElementById("authEmail").value.trim();
 
     if (!email) {
-        alert("Please enter your email address first.");
+
+        alert(
+            "Please enter your email address first."
+        );
+
         return;
     }
-    
-    async function sendPasswordReset(email) {
+
+    sendPasswordReset(email);
+}
+
+
+async function sendPasswordReset(email) {
 
     const response =
         await fetch(
@@ -1693,8 +1712,59 @@ function showForgotPassword() {
         );
     }
 }
+    async function updatePassword() {
 
-    sendPasswordReset(email);
+    const password =
+        document.getElementById("newPassword").value;
+
+    const message =
+        document.getElementById("resetMessage");
+
+    if (!password) {
+
+        message.textContent =
+            "Please enter a new password.";
+
+        return;
+    }
+
+    const response =
+        await fetch(
+            SUPABASE_URL + "/auth/v1/user",
+            {
+                method: "PUT",
+
+                headers: {
+                    "apikey":
+                        SUPABASE_ANON_KEY,
+
+                    "Authorization":
+                        "Bearer " +
+                        localStorage.getItem(
+                            "crewfinder_access_token"
+                        ),
+
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+                        password: password
+                    })
+            }
+        );
+
+    if (response.ok) {
+
+        message.textContent =
+            "Password updated successfully. You can now log in.";
+
+    } else {
+
+        message.textContent =
+            "Something went wrong. Please try again.";
+    }
 }
 
 /* ==================================================
@@ -2790,3 +2860,7 @@ showHome();
 </body>
 
 </html>
+
+}
+    
+checkPasswordReset();
