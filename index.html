@@ -753,13 +753,21 @@ nav a {
 
                 <label>Password</label>
 
-                <input
-                    type="password"
-                    id="authPassword"
-                    placeholder="Your password"
-                >
+<input
+    type="password"
+    id="authPassword"
+    placeholder="Your password"
+>
 
-            </div>
+<a
+    href="#"
+    onclick="showForgotPassword(); return false;"
+    style="display:block; margin-top:8px;"
+>
+    Forgot your password?
+</a>
+
+</div>
 
 
             <div class="form-actions">
@@ -1589,7 +1597,17 @@ function showLogin() {
 
     window.scrollTo(0, 0);
 }
+function showForgotPassword() {
 
+    const email = document.getElementById("authEmail").value.trim();
+
+    if (!email) {
+        alert("Please enter your email address first.");
+        return;
+    }
+
+    sendPasswordReset(email);
+}
 
 /* ==================================================
    ACCOUNT / SIGN UP
