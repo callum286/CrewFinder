@@ -1680,7 +1680,7 @@ async function sendPasswordReset(email) {
 
     const response =
         await fetch(
-SUPABASE_URL + "/auth/v1/recover?redirect_to=https://crew-finder-roan.vercel.app/?reset=true",            {
+SUPABASE_URL + "/auth/v1/recover",            {
                 method: "POST",
 
                 headers: {
@@ -1698,18 +1698,20 @@ SUPABASE_URL + "/auth/v1/recover?redirect_to=https://crew-finder-roan.vercel.app
             }
         );
 
-    if (response.ok) {
+if (response.ok) {
 
-        alert(
-            "Password reset email sent. Check your inbox."
-        );
+    alert(
+        "Password reset email sent. Check your inbox."
+    );
 
-    } else {
+} else {
 
-        alert(
-            "Something went wrong. Please try again."
-        );
-    }
+    const error =
+        await response.text();
+
+    alert(
+        "Password reset error: " + error
+    );
 }
     async function updatePassword() {
 
