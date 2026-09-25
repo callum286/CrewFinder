@@ -725,6 +725,12 @@ footer {
 
 </section>
 </div>
+    <div id="yourVoyages" class="your-voyages">
+    <h3>Your Voyages</h3>
+    <div id="voyageList">
+        <p>No voyages recorded yet.</p>
+    </div>
+</div>
 
 
 <!-- LOGIN PAGE -->
@@ -2313,6 +2319,60 @@ const voyages = await voyagesResponse.json();
     }
 }
 
+    async function loadYourVoyages() {
+    const accessToken = localStorage.getItem("crewfinder_access_token");
+    const userId = localStorage.getItem("crewfinder_user_id");
+    const voyageList = document.getElementById("voyageList");
+
+    if (!accessToken || !userId || !voyageList) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/voyages?user_id=eq." +
+            userId +
+            "&select=*&order=date.desc",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": "Bearer " + accessToken
+                }
+            }
+        );
+
+        if (!response.ok) {
+            voyageList.innerHTML = "<p>Could not load your voyages.</p>";
+            return;
+        }
+
+        const voyages = await response.json();
+
+        if (voyages.length === 0) {
+            voyageList.innerHTML = "<p>No voyages recorded yet.</p>";
+            return;
+        }
+
+        voyageList.innerHTML = voyages.map(function (voyage) {
+            return `
+                <div class="voyage-entry">
+                    <strong>${escapeHtml(voyage.date || "")}</strong>
+                    ${voyage.boat ? `<div>⛵ ${escapeHtml(voyage.boat)}</div>` : ""}
+                    ${voyage.location ? `<div>📍 ${escapeHtml(voyage.location)}</div>` : ""}
+                    ${voyage.miles !== null && voyage.miles !== undefined ? `<div>🌊 ${escapeHtml(String(voyage.miles))} nautical miles</div>` : ""}
+                    ${voyage.notes ? `<div>${escapeHtml(voyage.notes)}</div>` : ""}
+                </div>
+            `;
+        }).join("");
+
+    } catch (error) {
+        console.error(error);
+        voyageList.innerHTML = "<p>Something went wrong loading your voyages.</p>";
+    }
+}
+
 
 /* ==================================================
    SECURITY
@@ -2342,6 +2402,7 @@ if (!checkPasswordReset()) {
 });
     
 updateLogbookStats();
+loadYourVoyages();
 showHome();
 }
 
