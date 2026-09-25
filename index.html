@@ -677,10 +677,53 @@ footer {
 
         </div>
 
+
+        <div class="voyage-form">
+
+            <h3>Add a voyage</h3>
+
+            <input
+                type="date"
+                id="voyageDate"
+            >
+
+            <input
+                type="text"
+                id="voyageBoat"
+                placeholder="Boat / fleet"
+            >
+
+            <input
+                type="text"
+                id="voyageLocation"
+                placeholder="Location"
+            >
+
+            <input
+                type="number"
+                id="voyageMiles"
+                placeholder="Nautical miles"
+                step="0.1"
+                min="0"
+            >
+
+            <textarea
+                id="voyageNotes"
+                placeholder="Notes about the voyage"
+            ></textarea>
+
+            <button
+                class="button primary"
+                onclick="addVoyage()"
+            >
+                Add Voyage
+            </button>
+
+        </div>
+
     </div>
 
 </section>
-
 </div>
 
 
