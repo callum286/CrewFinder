@@ -2229,6 +2229,18 @@ async function searchCrew() {
         }
 
         let profiles = await response.json();
+        const voyagesResponse = await fetch(
+    SUPABASE_URL + "/rest/v1/public_voyages?select=*",
+    {
+        method: "GET",
+        headers: {
+            "apikey": SUPABASE_ANON_KEY,
+            "Authorization": "Bearer " + SUPABASE_ANON_KEY
+        }
+    }
+);
+
+const voyages = await voyagesResponse.json();
 
         profiles = profiles.filter(function (profile) {
             const roleMatches =
@@ -2256,6 +2268,9 @@ async function searchCrew() {
         }
 
         results.innerHTML = profiles.map(function (profile) {
+            const profileVoyages = voyages.filter(function (voyage) {
+    return voyage.user_id === profile.user_id;
+});
             return `
                 <div class="search-result">
 <h3>
@@ -2271,6 +2286,22 @@ async function searchCrew() {
                     ${profile.qualifications ? `<p><strong>Qualifications:</strong> ${escapeHtml(profile.qualifications)}</p>` : ""}
                     ${profile.availability ? `<p><strong>Availability:</strong> ${escapeHtml(profile.availability)}</p>` : ""}
                     ${profile.contact_detail ? `<div class="contact-result"><strong>Contact:</strong> ${escapeHtml(profile.contact_method || "")} — ${escapeHtml(profile.contact_detail)}</div>` : ""}
+                    ${profileVoyages.length > 0 ? `
+    <div class="profile-voyages">
+        <h4>Sailing Logbook</h4>
+        ${profileVoyages.map(function (voyage) {
+            return `
+                <div class="voyage-entry">
+                    <strong>${escapeHtml(voyage.date || "")}</strong>
+                    ${voyage.boat ? `<div>⛵ ${escapeHtml(voyage.boat)}</div>` : ""}
+                    ${voyage.location ? `<div>📍 ${escapeHtml(voyage.location)}</div>` : ""}
+                    ${voyage.miles !== null && voyage.miles !== undefined ? `<div>🌊 ${escapeHtml(String(voyage.miles))} nautical miles</div>` : ""}
+                    ${voyage.notes ? `<div>${escapeHtml(voyage.notes)}</div>` : ""}
+                </div>
+            `;
+        }).join("")}
+    </div>
+` : ""}
                 </div>
             `;
         }).join("");
