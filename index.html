@@ -2282,17 +2282,28 @@ const voyages = await voyagesResponse.json();
 <h3>
     ${escapeHtml(profile.first_name || "")} ${escapeHtml(profile.last_name || "")}
     ${profile.verified ? '<span class="verified-badge">✓</span>' : ""}
+<h3>
+    ${escapeHtml(profile.first_name || "")} ${escapeHtml(profile.last_name || "")}
+    ${profile.verified ? '<span class="verified-badge">✓</span>' : ""}
 </h3>
-                    <div class="location">${escapeHtml(profile.location || "")}</div>
-                    ${profile.about_me ? `<p>${escapeHtml(profile.about_me)}</p>` : ""}
-                    ${profile.preferred_role ? `<p><strong>Role:</strong> ${escapeHtml(profile.preferred_role)}</p>` : ""}
-                    ${profile.preferred_sailing ? `<p><strong>Sailing:</strong> ${escapeHtml(profile.preferred_sailing)}</p>` : ""}
-                    ${profile.racing_experience ? `<p><strong>Racing:</strong> ${escapeHtml(profile.racing_experience)}</p>` : ""}
-                    ${profile.boats ? `<p><strong>Boats:</strong> ${escapeHtml(profile.boats)}</p>` : ""}
-                    ${profile.qualifications ? `<p><strong>Qualifications:</strong> ${escapeHtml(profile.qualifications)}</p>` : ""}
-                    ${profile.availability ? `<p><strong>Availability:</strong> ${escapeHtml(profile.availability)}</p>` : ""}
-                    ${profile.contact_detail ? `<div class="contact-result"><strong>Contact:</strong> ${escapeHtml(profile.contact_method || "")} — ${escapeHtml(profile.contact_detail)}</div>` : ""}
-                    ${profileVoyages.length > 0 ? `
+
+<div class="location">
+    ${escapeHtml(profile.location || "")}
+</div>
+
+${profile.preferred_role ? `<p><strong>Role:</strong> ${escapeHtml(profile.preferred_role)}</p>` : ""}
+${profile.preferred_sailing ? `<p><strong>Sailing:</strong> ${escapeHtml(profile.preferred_sailing)}</p>` : ""}
+<div class="profile-details" style="display:none;">
+    ${profile.racing_experience ? `<p><strong>Racing:</strong> ${escapeHtml(profile.racing_experience)}</p>` : ""}
+    ${profile.boats ? `<p><strong>Boats:</strong> ${escapeHtml(profile.boats)}</p>` : ""}
+    ${profile.qualifications ? `<p><strong>Qualifications:</strong> ${escapeHtml(profile.qualifications)}</p>` : ""}
+    ${profile.availability ? `<p><strong>Availability:</strong> ${escapeHtml(profile.availability)}</p>` : ""}
+    ${profile.contact_detail ? `<div class="contact-result"><strong>Contact:</strong> ${escapeHtml(profile.contact_method || "")} — ${escapeHtml(profile.contact_detail)}</div>` : ""}
+</div>
+
+<button class="button primary" onclick="this.previousElementSibling.style.display = this.previousElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'View Profile' ? 'Hide Profile' : 'View Profile';">
+    View Profile
+</button>
     <div class="profile-voyages">
         <h4>Sailing Logbook</h4>
         ${profileVoyages.map(function (voyage) {
