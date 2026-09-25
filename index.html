@@ -655,15 +655,15 @@ footer {
 
         <div class="stats">
 
-            <div class="stat">
-                <strong>0</strong>
-                <span>nautical miles</span>
-            </div>
+  <div class="stat">
+    <strong id="totalMiles">0</strong>
+    <span>nautical miles</span>
+</div>
 
-            <div class="stat">
-                <strong>0</strong>
-                <span>voyages</span>
-            </div>
+<div class="stat">
+    <strong id="totalVoyages">0</strong>
+    <span>voyages</span>
+</div>
 
             <div class="stat">
                 <strong>0</strong>
@@ -2092,67 +2092,7 @@ async function updateProfile() {
 /* ==================================================
    FIND CREW
    ================================================== */
-async function addVoyage() {
-    const date = document.getElementById("voyageDate").value;
-    const boat = document.getElementById("voyageBoat").value.trim();
-    const location = document.getElementById("voyageLocation").value.trim();
-    const miles = document.getElementById("voyageMiles").value;
-    const notes = document.getElementById("voyageNotes").value.trim();
 
-    const accessToken = localStorage.getItem("crewfinder_access_token");
-    const userId = localStorage.getItem("crewfinder_user_id");
-
-    if (!accessToken || !userId) {
-        alert("Please log in before adding a voyage.");
-        return;
-    }
-
-    if (!date) {
-        alert("Please enter a date.");
-        return;
-    }
-
-    try {
-        const response = await fetch(
-            SUPABASE_URL + "/rest/v1/voyages",
-            {
-                method: "POST",
-                headers: {
-                    "apikey": SUPABASE_ANON_KEY,
-                    "Authorization": "Bearer " + accessToken,
-                    "Content-Type": "application/json",
-                    "Prefer": "return=minimal"
-                },
-                body: JSON.stringify({
-                    user_id: userId,
-                    date: date,
-                    boat: boat,
-                    location: location,
-                    miles: miles ? Number(miles) : null,
-                    notes: notes
-                })
-            }
-        );
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            alert("Could not save voyage: " + errorText);
-            return;
-        }
-
-        alert("Voyage added successfully.");
-
-        document.getElementById("voyageDate").value = "";
-        document.getElementById("voyageBoat").value = "";
-        document.getElementById("voyageLocation").value = "";
-        document.getElementById("voyageMiles").value = "";
-        document.getElementById("voyageNotes").value = "";
-
-    } catch (error) {
-        console.error(error);
-        alert("Something went wrong while adding the voyage.");
-    }
-}
     async function addVoyage() {
     const date = document.getElementById("voyageDate").value;
     const boat = document.getElementById("voyageBoat").value.trim();
@@ -2202,6 +2142,7 @@ async function addVoyage() {
         }
 
         alert("Voyage added successfully.");
+        updateLogbookStats();
 
         document.getElementById("voyageDate").value = "";
         document.getElementById("voyageBoat").value = "";
@@ -2212,6 +2153,50 @@ async function addVoyage() {
     } catch (error) {
         console.error(error);
         alert("Something went wrong while adding the voyage.");
+    }
+}
+    async function updateLogbookStats() {
+    const accessToken = localStorage.getItem("crewfinder_access_token");
+    const userId = localStorage.getItem("crewfinder_user_id");
+
+    if (!accessToken || !userId) {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/voyages?user_id=eq." +
+            userId +
+            "&select=miles",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": "Bearer " + accessToken
+                }
+            }
+        );
+
+        if (!response.ok) {
+            console.error(await response.text());
+            return;
+        }
+
+        const voyages = await response.json();
+
+        const totalMiles = voyages.reduce(function (total, voyage) {
+            return total + Number(voyage.miles || 0);
+        }, 0);
+
+        document.getElementById("totalMiles").textContent =
+            totalMiles.toFixed(1);
+
+        document.getElementById("totalVoyages").textContent =
+            voyages.length;
+
+    } catch (error) {
+        console.error(error);
     }
 }
 async function searchCrew() {
@@ -2325,7 +2310,8 @@ if (!checkPasswordReset()) {
     }
 });
     
-    showHome();
+updateLogbookStats();
+showHome();
 }
 
 </script>
