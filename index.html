@@ -2153,6 +2153,14 @@ function escapeHtml(value) {
    ================================================== */
 
 if (!checkPasswordReset()) {
+    
+    document.getElementById("verificationCheckbox").addEventListener("change", function () {
+    if (this.checked) {
+        alert("CrewFinder Verified is available with a subscription. Subscribe to unlock verification.");
+        this.checked = false;
+    }
+});
+    
     showHome();
 }
 
