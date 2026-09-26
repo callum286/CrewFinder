@@ -9,6 +9,7 @@
 
 <title>Crew Finder | Find Your Next Yachting Adventure</title>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
 
 * {
@@ -56,6 +57,52 @@ nav a {
 
 nav a:hover {
     color: #1687c9;
+}
+
+.instagram-link {
+    display: inline-block;
+    margin-top: 18px;
+    color: rgba(255, 255, 255, 0.82);
+    text-decoration: none;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+}
+
+.instagram-link:hover {
+    color: white;
+}
+
+
+.member-button-wrap {
+    margin-top: 10px;
+}
+
+.member-button {
+    padding: 7px 16px;
+    font-size: 13px;
+}
+
+.advertisement-banner {
+    margin: 18px auto 0;
+    max-width: 900px;
+    padding: 9px 16px;
+    text-align: center;
+    border: 1px solid #dfe7eb;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.82);
+    color: #6b7d87;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+}
+
+.advertisement-banner a {
+    color: #4f6875;
+    text-decoration: none;
+}
+
+.advertisement-banner a:hover {
+    text-decoration: underline;
 }
 
 .hero {
@@ -428,6 +475,287 @@ textarea:focus {
     border-top: 1px solid #e1e8ec;
 }
 
+
+.profile-toggle {
+    margin-top: 8px;
+}
+
+.profile-details {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e8ec;
+}
+
+.profile-voyages {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e1e8ec;
+}
+
+.profile-voyages h4 {
+    margin-bottom: 12px;
+}
+
+.voyage-entry {
+    background: #f5f8fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.your-voyages {
+    margin-top: 30px;
+    grid-column: 1 / -1;
+}
+
+.your-voyages h3 {
+    margin-bottom: 15px;
+}
+
+.founder-banner {
+    max-width: 1050px;
+    margin: 28px auto 0;
+    padding: 14px 18px;
+    border: 1px solid #dce7ec;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    background: #fbfdfe;
+}
+
+.founder-banner > div {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.founder-label,
+.premium-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    color: #1683d8;
+}
+
+.founder-banner strong {
+    font-size: 15px;
+}
+
+.founder-banner span:last-child {
+    color: #607681;
+    font-size: 13px;
+}
+
+.premium-lock {
+    grid-column: 1 / -1;
+    background: #183440;
+    border: 1px solid #2b4b59;
+    border-radius: 14px;
+    padding: 28px;
+    text-align: center;
+}
+
+.premium-lock-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.premium-lock h3 {
+    margin-bottom: 8px;
+}
+
+.premium-lock p {
+    max-width: 650px;
+    margin: 0 auto 18px;
+}
+
+.premium-page {
+    max-width: 950px;
+}
+
+.premium-page .profile-heading {
+    text-align: center;
+}
+
+.premium-page .profile-heading h1 {
+    margin-bottom: 10px;
+}
+
+.founder-offer-card {
+    background: #10212b;
+    color: white;
+    border-radius: 18px;
+    padding: 38px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.founder-offer-card h2 {
+    font-size: 36px;
+    margin: 12px 0 8px;
+}
+
+.founder-limit {
+    color: #bdd0d9;
+}
+
+.founder-remaining {
+    margin: 24px auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.founder-remaining strong {
+    font-size: 48px;
+    color: #53c8ff;
+    line-height: 1;
+}
+
+.founder-remaining span {
+    color: #bdd0d9;
+    margin-top: 7px;
+}
+
+.small-note {
+    color: #9fb6c1;
+    font-size: 13px;
+    margin-bottom: 22px;
+}
+
+.premium-price-ladder {
+    max-width: 520px;
+    margin: 0 auto 22px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.premium-price-ladder > div {
+    background: #183440;
+    border: 1px solid #2b4b59;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.premium-price-ladder strong,
+.premium-price-ladder span {
+    display: block;
+}
+
+.premium-price-ladder span {
+    color: #bdd0d9;
+    margin-top: 3px;
+    font-size: 13px;
+}
+
+.premium-features-card {
+    background: white;
+    border: 1px solid #e1e8ec;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+.premium-features-card h2 {
+    margin-bottom: 22px;
+}
+
+.premium-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.premium-feature-grid > div {
+    background: #f5f8fa;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.premium-feature-grid strong,
+.premium-feature-grid span {
+    display: block;
+}
+
+.premium-feature-grid span {
+    color: #607681;
+    margin-top: 6px;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.premium-free-note {
+    text-align: center;
+    color: #607681;
+    margin: 20px 0;
+}
+
+
+
+.sailing-map-section {
+    grid-column: 1 / -1;
+    margin-top: 10px;
+}
+
+.sailing-map-section h3 {
+    margin-bottom: 6px;
+}
+
+.sailing-map-section > p {
+    color: #607681;
+    margin-bottom: 14px;
+}
+
+.sailing-map-preview { grid-column:1 / -1; margin-top:24px; }
+.map-heading-row { display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:14px; }
+.premium-map-label { font-size:11px; font-weight:700; letter-spacing:.12em; color:#1683d8; margin-bottom:5px; }
+.map-lock-badge { white-space:nowrap; background:#f1f5f7; border:1px solid #dce5e9; border-radius:999px; padding:7px 11px; font-size:12px; color:#526a76; }
+.map-preview-wrap { position:relative; }
+.map-preview-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.68); backdrop-filter:blur(2px); border-radius:14px; }
+.map-preview-card { max-width:390px; margin:20px; padding:24px; text-align:center; background:rgba(255,255,255,.96); border:1px solid #dce5e9; border-radius:14px; box-shadow:0 12px 35px rgba(25,55,70,.12); }
+.map-preview-card h3 { margin-bottom:8px; } .map-preview-card p { color:#607681; margin-bottom:16px; }
+#sailingMap {
+    width: 100%;
+    height: 420px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #dce5e9;
+    background: #eaf0f3;
+}
+
+.map-empty {
+    padding: 22px;
+    text-align: center;
+    color: #607681;
+    background: #f5f8fa;
+    border-radius: 10px;
+    margin-top: 12px;
+}
+
+.journey-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.journey-fields input {
+    width: 100%;
+}
+
+@media (max-width: 800px) {
+    .journey-fields {
+        grid-template-columns: 1fr;
+    }
+
+    #sailingMap {
+        height: 330px;
+    }
+}
+
 .no-results {
     background: white;
     padding: 30px;
@@ -456,6 +784,21 @@ footer {
         grid-template-columns: 1fr;
     }
 
+    .founder-banner {
+        margin-left: 18px;
+        margin-right: 18px;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .premium-feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .founder-offer-card {
+        padding: 28px 20px;
+    }
+
     nav {
         display: flex;
         flex-wrap: wrap;
@@ -478,6 +821,189 @@ footer {
 
     .profile-heading h1 {
         font-size: 36px;
+    }
+}
+
+
+
+.premium-home-promo {
+    max-width: 1100px;
+    margin: 18px auto 0;
+    padding: 14px 18px;
+    border: 1px solid #dfe7ec;
+    border-radius: 10px;
+    background: #fafcfd;
+    color: #52616b;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.premium-home-promo strong {
+    color: #173042;
+}
+
+.premium-home-button {
+    margin-left: 10px;
+    padding: 7px 14px;
+    font-size: 13px;
+}
+
+@media (max-width: 700px) {
+    .premium-home-promo {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    .premium-home-button {
+        display: block;
+        margin: 10px auto 0;
+    }
+}
+
+/* ==================================================
+   ACHIEVEMENTS PAGE
+   ================================================== */
+
+.achievements-page {
+    max-width: 1100px;
+}
+
+.achievements-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin: 25px 0 32px;
+}
+
+.achievement-summary-card {
+    background: #f7fafb;
+    border: 1px solid #dfe7ec;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.achievement-summary-card strong {
+    display: block;
+    font-size: 28px;
+    color: #173042;
+    margin-bottom: 5px;
+}
+
+.achievement-summary-card span {
+    color: #607681;
+    font-size: 14px;
+}
+
+.achievements-section-title {
+    margin: 28px 0 14px;
+    color: #173042;
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.achievement-card {
+    position: relative;
+    background: white;
+    border: 1px solid #dfe7ec;
+    border-radius: 14px;
+    padding: 20px;
+    min-height: 165px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.achievement-card.earned {
+    border-color: #1683d8;
+    box-shadow: 0 5px 18px rgba(16, 33, 43, 0.07);
+}
+
+.achievement-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #eef4f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 12px;
+}
+
+.achievement-card.earned .achievement-icon {
+    background: #e6f3fb;
+}
+
+.achievement-card h3 {
+    margin: 0 0 5px;
+    color: #173042;
+    font-size: 18px;
+}
+
+.achievement-card p {
+    margin: 0;
+    color: #607681;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.achievement-status {
+    margin-top: 15px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1683d8;
+}
+
+.achievement-card.locked .achievement-status {
+    color: #8a989f;
+}
+
+.achievement-progress {
+    margin-top: 12px;
+    height: 7px;
+    background: #e8eef1;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.achievement-progress-bar {
+    height: 100%;
+    width: 0;
+    background: #1683d8;
+    border-radius: 99px;
+    transition: width 0.3s ease;
+}
+
+.achievements-lock {
+    max-width: 700px;
+    margin: 35px auto;
+    padding: 40px 25px;
+    text-align: center;
+    background: #f7fafb;
+    border: 1px solid #dfe7ec;
+    border-radius: 16px;
+}
+
+.achievements-lock .premium-lock-icon {
+    font-size: 34px;
+}
+
+.achievements-note {
+    margin: 18px 0 0;
+    color: #607681;
+    font-size: 13px;
+    text-align: center;
+}
+
+@media (max-width: 800px) {
+    .achievements-summary,
+    .achievements-grid {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -505,8 +1031,16 @@ footer {
             Create Profile
         </a>
 
-        <a href="#logbook" onclick="showHome();">
+        <a href="#logbook" onclick="openLogbook(); return false;">
             Logbook
+        </a>
+
+        <a onclick="showAchievements()">
+            Achievements
+        </a>
+
+        <a onclick="showPremium()">
+            Premium
         </a>
 
         <a onclick="showLogin()">
@@ -559,9 +1093,33 @@ footer {
 
         </div>
 
+        <a
+            class="instagram-link"
+            href="https://www.instagram.com/callum___aldridge/"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            Follow @callum___aldridge on Instagram ↗
+        </a>
+
+        <div class="member-button-wrap">
+            <button class="button secondary member-button" onclick="showPremium()">
+                Member
+            </button>
+        </div>
+
     </div>
 
 </section>
+
+<div class="advertisement-banner">
+    Advertisement space for sale — <a href="mailto:callumianaldridge@gmail.com">contact callumianaldridge@gmail.com</a>
+</div>
+
+<div class="premium-home-promo">
+    <strong>CrewFinder Premium</strong> — build a detailed history of your time on the water with an unlimited sailing logbook, personal sailing map, sailing statistics, milestones, a digital sailing CV, CrewFinder Verified and a yearly sailing summary.
+    <button class="button secondary premium-home-button" onclick="showPremium()">Explore Premium</button>
+</div>
 
 
 <section id="how">
@@ -644,10 +1202,8 @@ footer {
             <br>
 
             <p>
-                Premium members will eventually be able to build a
-                detailed history of their time on the water, with
-                statistics and an automatically calculated nautical-mile
-                total.
+                Premium members can build a detailed history of their time on the water, with
+                statistics and an automatically calculated nautical-mile total.
             </p>
 
         </div>
@@ -678,57 +1234,164 @@ footer {
         </div>
 
 
-        <div class="voyage-form">
+        <div class="sailing-map-preview">
+            <div class="sailing-map-section">
+                <div class="map-heading-row">
+                    <div><div class="premium-map-label">PREMIUM FEATURE</div><h3>Your Sailing Map</h3><p>Track your journeys and build a visual history of where you have sailed.</p></div>
+                    <div class="map-lock-badge">🔒 Premium</div>
+                </div>
+                <div class="map-preview-wrap">
+                    <div id="sailingMap"></div>
+                    <div id="mapPreviewOverlay" class="map-preview-overlay">
+                        <div class="map-preview-card"><div class="premium-lock-icon">🗺️</div><h3>Build your sailing map</h3><p>Premium members can add journeys, connect routes and keep their sailing history in one place.</p><button class="button primary" onclick="showPremium()">Unlock Premium</button></div>
+                    </div>
+                </div>
+                <div id="mapEmpty" class="map-empty" style="display:none;">Your sailing map will appear here when you add your first journey.</div>
+            </div>
+        </div>
 
-            <h3>Add a voyage</h3>
+        <div id="voyageLocked" class="premium-lock">
+            <div class="premium-lock-icon">🔒</div>
+            <h3>Your personal logbook is a Premium feature.</h3>
+            <p>Everyone can view CrewFinder's Logbook, but Premium members can add and manage their own voyages, miles and sailing history.</p>
+            <button class="button primary" onclick="showPremium()">Unlock Premium</button>
+        </div>
 
-            <input
-                type="date"
-                id="voyageDate"
-            >
+        <div id="voyagePremiumContent" style="display:none;">
 
-            <input
-                type="text"
-                id="voyageBoat"
-                placeholder="Boat / fleet"
-            >
+            <div class="voyage-form">
+                <h3>Add a journey</h3>
+                <input type="date" id="voyageDate">
+                <input type="text" id="voyageBoat" placeholder="Boat / fleet">
 
-            <input
-                type="text"
-                id="voyageLocation"
-                placeholder="Location"
-            >
+                <div class="journey-fields">
+                    <input type="text" id="voyageStart" placeholder="Start location e.g. Portsmouth">
+                    <input type="text" id="voyageEnd" placeholder="End location e.g. Cowes">
+                </div>
 
-            <input
-                type="number"
-                id="voyageMiles"
-                placeholder="Nautical miles"
-                step="0.1"
-                min="0"
-            >
+                <input type="text" id="voyageLocation" placeholder="Other location or area (optional)">
+                <input type="number" id="voyageMiles" placeholder="Nautical miles" step="0.1" min="0">
+                <textarea id="voyageNotes" placeholder="Notes about the journey"></textarea>
+                <button class="button primary" onclick="addVoyage()">
+                    Add Journey
+                </button>
+            </div>
 
-            <textarea
-                id="voyageNotes"
-                placeholder="Notes about the voyage"
-            ></textarea>
-
-            <button
-                class="button primary"
-                onclick="addVoyage()"
-            >
-                Add Voyage
-            </button>
-
+            <div id="yourVoyages" class="your-voyages">
+                <h3>Your Voyages</h3>
+                <div id="voyageList">
+                    <p>No voyages recorded yet.</p>
+                </div>
+            </div>
         </div>
 
     </div>
 
 </section>
 </div>
-    <div id="yourVoyages" class="your-voyages">
-    <h3>Your Voyages</h3>
-    <div id="voyageList">
-        <p>No voyages recorded yet.</p>
+
+
+
+<!-- ACHIEVEMENTS PAGE -->
+
+<div id="achievementsPage" class="profile-page" style="display:none;">
+    <div class="profile-container achievements-page">
+        <div class="profile-heading">
+            <div class="premium-eyebrow">CREWFINDER ACHIEVEMENTS</div>
+            <h1>Your sailing milestones.</h1>
+            <p>Earn achievements automatically from the voyages in your CrewFinder logbook.</p>
+        </div>
+
+        <div id="achievementsLocked" class="achievements-lock">
+            <div class="premium-lock-icon">🏆</div>
+            <h3>Achievements are a Premium feature.</h3>
+            <p>Your achievements are calculated automatically from your logged voyages, miles, routes, boats and sailing locations.</p>
+            <button class="button primary" onclick="showPremium()">Unlock Premium</button>
+        </div>
+
+        <div id="achievementsContent" style="display:none;">
+            <div class="achievements-summary">
+                <div class="achievement-summary-card">
+                    <strong id="achievementTotal">0</strong>
+                    <span>achievements earned</span>
+                </div>
+                <div class="achievement-summary-card">
+                    <strong id="achievementMiles">0</strong>
+                    <span>nautical miles logged</span>
+                </div>
+                <div class="achievement-summary-card">
+                    <strong id="achievementVoyages">0</strong>
+                    <span>voyages logged</span>
+                </div>
+            </div>
+
+            <h2 class="achievements-section-title">Voyages</h2>
+            <div id="voyageAchievements" class="achievements-grid"></div>
+
+            <h2 class="achievements-section-title">Distance</h2>
+            <div id="distanceAchievements" class="achievements-grid"></div>
+
+            <h2 class="achievements-section-title">Exploration</h2>
+            <div id="explorationAchievements" class="achievements-grid"></div>
+
+            <p class="achievements-note">
+                Achievements update automatically whenever you add a voyage to your logbook.
+            </p>
+        </div>
+
+        <button class="button back-button" onclick="showHome()">Back to home</button>
+    </div>
+</div>
+
+
+<!-- PREMIUM PAGE -->
+
+<div id="premiumPage" class="profile-page" style="display:none;">
+    <div class="profile-container premium-page">
+        <div class="profile-heading">
+            <div class="premium-eyebrow">CREWFINDER PREMIUM</div>
+            <h1>Build your sailing history.</h1>
+            <p>Your voyages. Your miles. Your sailing CV.</p>
+        </div>
+
+        <div class="founder-offer-card">
+            <div class="founder-offer-copy">
+                <div class="founder-label">🔥 FOUNDING MEMBER OFFER</div>
+                <h2>Premium for £1/month</h2>
+                <p class="founder-limit">Only <strong>25 places</strong> are available at the founding price.</p>
+                <div class="founder-remaining">
+                    <strong id="founderPlacesRemaining">25</strong>
+                    <span>places remaining</span>
+                </div>
+                <p class="small-note">Founding members keep the £1/month price for as long as their subscription stays active.</p>
+                <div class="premium-price-ladder">
+                    <div><strong>Next 75</strong><span>£2.99/month</span></div>
+                    <div><strong>After 100</strong><span>£4.99/month</span></div>
+                </div>
+                <button class="button primary premium-subscribe-button" onclick="startSubscription()">
+                    Join for £1/month
+                </button>
+            </div>
+        </div>
+
+        <div class="premium-features-card">
+            <h2>What's included</h2>
+            <div class="premium-feature-grid">
+                <div><strong>✓ Unlimited sailing logbook</strong><span>Record and manage your voyages.</span></div>
+                <div><strong>🗺 Personal sailing map</strong><span>See where your sailing has taken you.</span></div>
+                <div><strong>📊 Sailing statistics</strong><span>Track miles, voyages, locations and more.</span></div>
+                <div><strong>🏆 Sailing milestones</strong><span>Unlock milestones as your experience grows.</span></div>
+                <div><strong>📄 Digital Sailing CV</strong><span>Turn your CrewFinder history into a professional sailing CV.</span></div>
+                <div><strong>✓ CrewFinder Verified</strong><span>Show that your profile is verified.</span></div>
+                <div><strong>🌍 My Sailing Year</strong><span>A yearly summary of your time on the water.</span></div>
+            </div>
+        </div>
+
+        <div class="premium-free-note">
+            <strong>Not ready for Premium?</strong> Your CrewFinder profile and crew search remain free.
+        </div>
+
+        <button class="button back-button" onclick="showHome()">Back to home</button>
     </div>
 </div>
 
@@ -1601,8 +2264,12 @@ footer {
 
 <footer>
     © 2026 CrewFinder — Find your next yachting adventure.
+    <br>
+    Contact: <a href="mailto:callumianaldridge@gmail.com">callumianaldridge@gmail.com</a>
 </footer>
 
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
 
@@ -1626,6 +2293,8 @@ function hideAllPages() {
     document.getElementById("profilePage").style.display = "none";
     document.getElementById("searchPage").style.display = "none";
     document.getElementById("loginPage").style.display = "none";
+    document.getElementById("premiumPage").style.display = "none";
+    document.getElementById("achievementsPage").style.display = "none";
     document.getElementById("resetPasswordPage").style.display = "none";
 }
 
@@ -1660,6 +2329,523 @@ function showLogin() {
     hideAllPages();
     document.getElementById("loginPage").style.display = "block";
     window.scrollTo(0, 0);
+}
+
+function showPremium() {
+    hideAllPages();
+    document.getElementById("premiumPage").style.display = "block";
+    loadFounderOffer();
+    window.scrollTo(0, 0);
+}
+
+async function showAchievements() {
+    hideAllPages();
+    document.getElementById("achievementsPage").style.display = "block";
+    window.scrollTo(0, 0);
+    await loadAchievements();
+}
+
+async function openLogbook() {
+    showHome();
+    await updatePremiumUI();
+    setTimeout(function () {
+        const section = document.getElementById("logbook");
+        if (section) section.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+}
+
+
+/* ==================================================
+   ACHIEVEMENTS
+   ================================================== */
+
+function buildAchievementCard(achievement, currentValue) {
+    const target = Number(achievement.target);
+    const current = Number(currentValue || 0);
+    const earned = current >= target;
+    const progress = Math.min((current / target) * 100, 100);
+    const displayCurrent = achievement.formatCurrent
+        ? achievement.formatCurrent(current)
+        : String(current);
+    const displayTarget = achievement.formatTarget
+        ? achievement.formatTarget(target)
+        : String(target);
+
+    return `
+        <div class="achievement-card ${earned ? "earned" : "locked"}">
+            <div>
+                <div class="achievement-icon">${achievement.icon}</div>
+                <h3>${escapeHtml(achievement.title)}</h3>
+                <p>${escapeHtml(achievement.description)}</p>
+            </div>
+            <div>
+                <div class="achievement-status">
+                    ${earned ? "✓ Earned" : displayCurrent + " / " + displayTarget}
+                </div>
+                <div class="achievement-progress">
+                    <div class="achievement-progress-bar" style="width:${progress}%"></div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function formatNumber(value) {
+    return Number(value).toLocaleString("en-GB", {
+        maximumFractionDigits: 1
+    });
+}
+
+async function loadAchievements() {
+    const locked = document.getElementById("achievementsLocked");
+    const content = document.getElementById("achievementsContent");
+
+    if (!locked || !content) return;
+
+    const premium = await getPremiumStatus();
+
+    if (!premium) {
+        locked.style.display = "block";
+        content.style.display = "none";
+        return;
+    }
+
+    locked.style.display = "none";
+    content.style.display = "block";
+
+    const accessToken = localStorage.getItem("crewfinder_access_token");
+    const userId = localStorage.getItem("crewfinder_user_id");
+
+    if (!accessToken || !userId) {
+        locked.style.display = "block";
+        content.style.display = "none";
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/voyages?user_id=eq." +
+            encodeURIComponent(userId) +
+            "&select=date,boat,location,start_location,end_location,miles,notes&order=date.asc",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": "Bearer " + accessToken
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(await response.text());
+        }
+
+        const voyages = await response.json();
+
+        const totalVoyages = voyages.length;
+        const totalMiles = voyages.reduce(function(total, voyage) {
+            return total + Number(voyage.miles || 0);
+        }, 0);
+
+        const mappedVoyages = voyages.filter(function(voyage) {
+            return voyage.start_location && voyage.end_location;
+        });
+
+        const uniqueLocations = new Set();
+        const uniqueBoats = new Set();
+
+        voyages.forEach(function(voyage) {
+            [voyage.location, voyage.start_location, voyage.end_location]
+                .filter(Boolean)
+                .forEach(function(value) {
+                    uniqueLocations.add(String(value).trim().toLowerCase());
+                });
+
+            if (voyage.boat && voyage.boat.trim()) {
+                uniqueBoats.add(voyage.boat.trim().toLowerCase());
+            }
+        });
+
+        const longestVoyage = voyages.reduce(function(longest, voyage) {
+            return Math.max(longest, Number(voyage.miles || 0));
+        }, 0);
+
+        const achievements = {
+            voyages: [
+                {
+                    icon: "⛵",
+                    title: "First Voyage",
+                    description: "Log your first sailing journey.",
+                    target: 1
+                },
+                {
+                    icon: "🌊",
+                    title: "Getting Out There",
+                    description: "Log 5 sailing journeys.",
+                    target: 5
+                },
+                {
+                    icon: "🧭",
+                    title: "Regular Sailor",
+                    description: "Log 10 sailing journeys.",
+                    target: 10
+                },
+                {
+                    icon: "🏅",
+                    title: "Seasoned Sailor",
+                    description: "Log 25 sailing journeys.",
+                    target: 25
+                },
+                {
+                    icon: "🏆",
+                    title: "Voyage Builder",
+                    description: "Log 50 sailing journeys.",
+                    target: 50
+                },
+                {
+                    icon: "💯",
+                    title: "Century at Sea",
+                    description: "Log 100 sailing journeys.",
+                    target: 100
+                }
+            ],
+            distance: [
+                {
+                    icon: "🌊",
+                    title: "First 10 NM",
+                    description: "Log your first 10 nautical miles.",
+                    target: 10
+                },
+                {
+                    icon: "⚓",
+                    title: "50 Nautical Miles",
+                    description: "Reach 50 nautical miles.",
+                    target: 50
+                },
+                {
+                    icon: "🗺️",
+                    title: "100 Nautical Miles",
+                    description: "Reach 100 nautical miles.",
+                    target: 100
+                },
+                {
+                    icon: "🚤",
+                    title: "250 Nautical Miles",
+                    description: "Reach 250 nautical miles.",
+                    target: 250
+                },
+                {
+                    icon: "🌍",
+                    title: "500 Nautical Miles",
+                    description: "Reach 500 nautical miles.",
+                    target: 500
+                },
+                {
+                    icon: "🏆",
+                    title: "1,000 Nautical Miles",
+                    description: "Reach 1,000 nautical miles.",
+                    target: 1000
+                }
+            ],
+            exploration: [
+                {
+                    icon: "📍",
+                    title: "Explorer",
+                    description: "Log 5 different sailing locations.",
+                    target: 5
+                },
+                {
+                    icon: "🧭",
+                    title: "Coastal Explorer",
+                    description: "Log 10 different sailing locations.",
+                    target: 10
+                },
+                {
+                    icon: "⛵",
+                    title: "Fleet Hopper",
+                    description: "Log voyages on 3 different boats or fleets.",
+                    target: 3
+                },
+                {
+                    icon: "🗺️",
+                    title: "Route Builder",
+                    description: "Add 5 mapped journeys with a start and end location.",
+                    target: 5
+                },
+                {
+                    icon: "🚀",
+                    title: "Long Haul",
+                    description: "Complete a single logged voyage of 50 NM or more.",
+                    target: 50
+                }
+            ]
+        };
+
+        document.getElementById("achievementTotal").textContent =
+            "0";
+
+        document.getElementById("achievementMiles").textContent =
+            formatNumber(totalMiles);
+
+        document.getElementById("achievementVoyages").textContent =
+            totalVoyages;
+
+        const renderGroup = function(list, containerId, values) {
+            document.getElementById(containerId).innerHTML =
+                list.map(function(achievement) {
+                    return buildAchievementCard(
+                        achievement,
+                        values[achievement.title]
+                    );
+                }).join("");
+        };
+
+        const voyageValues = {};
+        achievements.voyages.forEach(function(a) {
+            voyageValues[a.title] = totalVoyages;
+        });
+
+        const distanceValues = {};
+        achievements.distance.forEach(function(a) {
+            distanceValues[a.title] = totalMiles;
+        });
+
+        const explorationValues = {
+            "Explorer": uniqueLocations.size,
+            "Coastal Explorer": uniqueLocations.size,
+            "Fleet Hopper": uniqueBoats.size,
+            "Route Builder": mappedVoyages.length,
+            "Long Haul": longestVoyage
+        };
+
+        renderGroup(achievements.voyages, "voyageAchievements", voyageValues);
+        renderGroup(achievements.distance, "distanceAchievements", distanceValues);
+        renderGroup(achievements.exploration, "explorationAchievements", explorationValues);
+
+        const earnedCount =
+            Object.values(voyageValues).filter(function(value, index) {
+                return value >= achievements.voyages[index].target;
+            }).length +
+            Object.values(distanceValues).filter(function(value, index) {
+                return value >= achievements.distance[index].target;
+            }).length +
+            Object.entries(explorationValues).filter(function(entry) {
+                const title = entry[0];
+                const value = entry[1];
+                const achievement = achievements.exploration.find(function(a) {
+                    return a.title === title;
+                });
+                return achievement && value >= achievement.target;
+            }).length;
+
+        document.getElementById("achievementTotal").textContent = earnedCount;
+
+    } catch (error) {
+        console.error("Could not load achievements:", error);
+        document.getElementById("voyageAchievements").innerHTML =
+            "<div class='no-results'>Could not load your sailing achievements.</div>";
+    }
+}
+
+async function getPremiumStatus() {
+    const accessToken = localStorage.getItem("crewfinder_access_token");
+    const userId = localStorage.getItem("crewfinder_user_id");
+
+    if (!accessToken || !userId) return false;
+
+    try {
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/profiles?user_id=eq." + userId + "&select=is_premium",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": "Bearer " + accessToken
+                }
+            }
+        );
+
+        if (!response.ok) return false;
+        const profiles = await response.json();
+        return profiles.length > 0 && profiles[0].is_premium === true;
+    } catch (error) {
+        console.error("Premium status check failed:", error);
+        return false;
+    }
+}
+
+let sailingMap = null;
+let sailingMapLayer = null;
+
+function initialiseSailingMap() {
+    const mapElement = document.getElementById("sailingMap");
+    if (!mapElement || typeof L === "undefined") return;
+
+    if (!sailingMap) {
+        sailingMap = L.map(mapElement).setView([50.8, -1.3], 8);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 18,
+            attribution: "© OpenStreetMap contributors"
+        }).addTo(sailingMap);
+        sailingMapLayer = L.layerGroup().addTo(sailingMap);
+    }
+
+    setTimeout(function () {
+        sailingMap.invalidateSize();
+    }, 100);
+}
+
+async function geocodeLocation(location) {
+    const query = encodeURIComponent(location);
+
+    try {
+        const response = await fetch(
+            "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" + query,
+            { headers: { "Accept": "application/json" } }
+        );
+
+        if (!response.ok) return null;
+        const data = await response.json();
+        if (!data.length) return null;
+
+        return {
+            lat: Number(data[0].lat),
+            lng: Number(data[0].lon),
+            name: data[0].display_name
+        };
+    } catch (error) {
+        console.error("Geocoding failed:", error);
+        return null;
+    }
+}
+
+async function loadSailingMap() {
+    const accessToken = localStorage.getItem("crewfinder_access_token");
+    const userId = localStorage.getItem("crewfinder_user_id");
+    const mapEmpty = document.getElementById("mapEmpty");
+
+    if (!document.getElementById("sailingMap")) return;
+
+    initialiseSailingMap();
+    if (!accessToken || !userId) return;
+    if (!sailingMap || !sailingMapLayer) return;
+
+    sailingMapLayer.clearLayers();
+
+    try {
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/voyages?user_id=eq." +
+            userId +
+            "&select=date,boat,location,start_location,end_location,miles&order=date.asc",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": "Bearer " + accessToken
+                }
+            }
+        );
+
+        if (!response.ok) return;
+        const voyages = await response.json();
+
+        if (mapEmpty) mapEmpty.style.display = voyages.length ? "none" : "block";
+        if (!voyages.length) return;
+
+        const points = [];
+
+        for (const voyage of voyages) {
+            if (!voyage.start_location || !voyage.end_location) continue;
+
+            const start = await geocodeLocation(voyage.start_location);
+            await new Promise(function(resolve) { setTimeout(resolve, 1100); });
+            const end = await geocodeLocation(voyage.end_location);
+
+            if (!start || !end) continue;
+
+            const line = L.polyline(
+                [[start.lat, start.lng], [end.lat, end.lng]],
+                { weight: 4, opacity: 0.8 }
+            ).addTo(sailingMapLayer);
+
+            line.bindPopup(
+                "<strong>" + escapeHtml(voyage.date || "Journey") + "</strong><br>" +
+                escapeHtml(voyage.start_location) + " → " + escapeHtml(voyage.end_location) +
+                (voyage.boat ? "<br>⛵ " + escapeHtml(voyage.boat) : "") +
+                (voyage.miles !== null && voyage.miles !== undefined ? "<br>🌊 " + escapeHtml(String(voyage.miles)) + " NM" : "")
+            );
+
+            L.marker([start.lat, start.lng]).addTo(sailingMapLayer)
+                .bindPopup("<strong>Start</strong><br>" + escapeHtml(voyage.start_location));
+
+            L.marker([end.lat, end.lng]).addTo(sailingMapLayer)
+                .bindPopup("<strong>End</strong><br>" + escapeHtml(voyage.end_location));
+
+            points.push([start.lat, start.lng], [end.lat, end.lng]);
+        }
+
+        if (points.length) {
+            sailingMap.fitBounds(points, { padding: [30, 30] });
+        }
+
+    } catch (error) {
+        console.error("Could not load sailing map:", error);
+    }
+}
+
+async function updatePremiumUI() {
+    const premium = await getPremiumStatus();
+    const locked = document.getElementById("voyageLocked");
+    const content = document.getElementById("voyagePremiumContent");
+
+    if (locked && content) {
+        locked.style.display = premium ? "none" : "block";
+        content.style.display = premium ? "block" : "none";
+    }
+
+    const mapOverlay = document.getElementById("mapPreviewOverlay");
+    if (mapOverlay) mapOverlay.style.display = premium ? "none" : "flex";
+    initialiseSailingMap();
+
+    if (premium) {
+        updateLogbookStats();
+        loadYourVoyages();
+        loadSailingMap();
+    }
+
+    return premium;
+}
+
+async function loadFounderOffer() {
+    const remainingElement = document.getElementById("founderPlacesRemaining");
+    if (!remainingElement) return;
+
+    try {
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/premium_founder_count?select=premium_count",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": "Bearer " + SUPABASE_ANON_KEY
+                }
+            }
+        );
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const count = Number(data[0]?.premium_count || 0);
+        remainingElement.textContent = Math.max(25 - count, 0);
+    } catch (error) {
+        console.error("Could not load founder count:", error);
+    }
+}
+
+function startSubscription() {
+    alert("Subscription checkout is the next step. The Premium page is ready; we now need to connect a real payment provider so successful payments can unlock Premium securely.");
 }
 
 
@@ -2102,6 +3288,8 @@ async function updateProfile() {
     async function addVoyage() {
     const date = document.getElementById("voyageDate").value;
     const boat = document.getElementById("voyageBoat").value.trim();
+    const startLocation = document.getElementById("voyageStart").value.trim();
+    const endLocation = document.getElementById("voyageEnd").value.trim();
     const location = document.getElementById("voyageLocation").value.trim();
     const miles = document.getElementById("voyageMiles").value;
     const notes = document.getElementById("voyageNotes").value.trim();
@@ -2110,12 +3298,24 @@ async function updateProfile() {
     const userId = localStorage.getItem("crewfinder_user_id");
 
     if (!accessToken || !userId) {
-        alert("Please log in before adding a voyage.");
+        alert("Please log in before adding a journey.");
+        return;
+    }
+
+    const premium = await getPremiumStatus();
+    if (!premium) {
+        alert("CrewFinder Premium is required to add journeys to your personal logbook.");
+        showPremium();
         return;
     }
 
     if (!date) {
         alert("Please enter a date.");
+        return;
+    }
+
+    if (!startLocation || !endLocation) {
+        alert("Please enter both a start and end location so the journey can be added to your map.");
         return;
     }
 
@@ -2135,6 +3335,8 @@ async function updateProfile() {
                     date: date,
                     boat: boat,
                     location: location,
+                    start_location: startLocation,
+                    end_location: endLocation,
                     miles: miles ? Number(miles) : null,
                     notes: notes
                 })
@@ -2143,24 +3345,29 @@ async function updateProfile() {
 
         if (!response.ok) {
             const errorText = await response.text();
-            alert("Could not save voyage: " + errorText);
+            alert("Could not save journey: " + errorText);
             return;
         }
 
-        alert("Voyage added successfully.");
-await updateLogbookStats();
+        alert("Journey added successfully.");
+        await updateLogbookStats();
+        await loadYourVoyages();
+        await loadSailingMap();
 
         document.getElementById("voyageDate").value = "";
         document.getElementById("voyageBoat").value = "";
+        document.getElementById("voyageStart").value = "";
+        document.getElementById("voyageEnd").value = "";
         document.getElementById("voyageLocation").value = "";
         document.getElementById("voyageMiles").value = "";
         document.getElementById("voyageNotes").value = "";
 
     } catch (error) {
         console.error(error);
-        alert("Something went wrong while adding the voyage.");
+        alert("Something went wrong while adding the journey.");
     }
 }
+
     async function updateLogbookStats() {
     const accessToken = localStorage.getItem("crewfinder_access_token");
     const userId = localStorage.getItem("crewfinder_user_id");
@@ -2234,21 +3441,22 @@ async function searchCrew() {
             return;
         }
 
-        let profiles = await response.json();
+        const profiles = await response.json();
+
         const voyagesResponse = await fetch(
-    SUPABASE_URL + "/rest/v1/public_voyages?select=*",
-    {
-        method: "GET",
-        headers: {
-            "apikey": SUPABASE_ANON_KEY,
-            "Authorization": "Bearer " + SUPABASE_ANON_KEY
-        }
-    }
-);
+            SUPABASE_URL + "/rest/v1/public_voyages?select=*",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": "Bearer " + SUPABASE_ANON_KEY
+                }
+            }
+        );
 
-const voyages = await voyagesResponse.json();
+        const voyages = voyagesResponse.ok ? await voyagesResponse.json() : [];
 
-        profiles = profiles.filter(function (profile) {
+        const filteredProfiles = profiles.filter(function (profile) {
             const roleMatches =
                 !role ||
                 profile.preferred_role === role ||
@@ -2267,58 +3475,60 @@ const voyages = await voyagesResponse.json();
             return roleMatches && sailingMatches && availabilityMatches;
         });
 
-        if (profiles.length === 0) {
+        if (filteredProfiles.length === 0) {
             results.innerHTML =
                 "<div class='no-results'>No crew profiles matched those filters.</div>";
             return;
         }
 
-        results.innerHTML = profiles.map(function (profile) {
+        results.innerHTML = filteredProfiles.map(function (profile) {
             const profileVoyages = voyages.filter(function (voyage) {
-    return voyage.user_id === profile.user_id;
-});
+                return voyage.user_id === profile.user_id;
+            });
+
             return `
                 <div class="search-result">
-<h3>
-    ${escapeHtml(profile.first_name || "")} ${escapeHtml(profile.last_name || "")}
-    ${profile.verified ? '<span class="verified-badge">✓</span>' : ""}
-<h3>
-    ${escapeHtml(profile.first_name || "")} ${escapeHtml(profile.last_name || "")}
-    ${profile.verified ? '<span class="verified-badge">✓</span>' : ""}
-</h3>
+                    <h3>
+                        ${escapeHtml(profile.first_name || "")} ${escapeHtml(profile.last_name || "")}
+                        ${profile.verified ? '<span class="verified-badge">✓</span>' : ""}
+                    </h3>
 
-<div class="location">
-    ${escapeHtml(profile.location || "")}
-</div>
+                    <div class="location">
+                        ${escapeHtml(profile.location || "")}
+                    </div>
 
-${profile.preferred_role ? `<p><strong>Role:</strong> ${escapeHtml(profile.preferred_role)}</p>` : ""}
-${profile.preferred_sailing ? `<p><strong>Sailing:</strong> ${escapeHtml(profile.preferred_sailing)}</p>` : ""}
-<div class="profile-details" style="display:none;">
-    ${profile.racing_experience ? `<p><strong>Racing:</strong> ${escapeHtml(profile.racing_experience)}</p>` : ""}
-    ${profile.boats ? `<p><strong>Boats:</strong> ${escapeHtml(profile.boats)}</p>` : ""}
-    ${profile.qualifications ? `<p><strong>Qualifications:</strong> ${escapeHtml(profile.qualifications)}</p>` : ""}
-    ${profile.availability ? `<p><strong>Availability:</strong> ${escapeHtml(profile.availability)}</p>` : ""}
-    ${profile.contact_detail ? `<div class="contact-result"><strong>Contact:</strong> ${escapeHtml(profile.contact_method || "")} — ${escapeHtml(profile.contact_detail)}</div>` : ""}
-</div>
+                    ${profile.preferred_role ? `<p><strong>Role:</strong> ${escapeHtml(profile.preferred_role)}</p>` : ""}
+                    ${profile.preferred_sailing ? `<p><strong>Sailing:</strong> ${escapeHtml(profile.preferred_sailing)}</p>` : ""}
 
-<button class="button primary" onclick="this.previousElementSibling.style.display = this.previousElementSibling.style.display === 'none' ? 'block' : 'none'; this.textContent = this.textContent === 'View Profile' ? 'Hide Profile' : 'View Profile';">
-    View Profile
-</button>
-    <div class="profile-voyages">
-        <h4>Sailing Logbook</h4>
-        ${profileVoyages.map(function (voyage) {
-            return `
-                <div class="voyage-entry">
-                    <strong>${escapeHtml(voyage.date || "")}</strong>
-                    ${voyage.boat ? `<div>⛵ ${escapeHtml(voyage.boat)}</div>` : ""}
-                    ${voyage.location ? `<div>📍 ${escapeHtml(voyage.location)}</div>` : ""}
-                    ${voyage.miles !== null && voyage.miles !== undefined ? `<div>🌊 ${escapeHtml(String(voyage.miles))} nautical miles</div>` : ""}
-                    ${voyage.notes ? `<div>${escapeHtml(voyage.notes)}</div>` : ""}
-                </div>
-            `;
-        }).join("")}
-    </div>
-` : ""}
+                    <button class="button primary profile-toggle" onclick="toggleProfileDetails(this)">
+                        View Profile
+                    </button>
+
+                    <div class="profile-details" style="display:none;">
+                        ${profile.about_me ? `<p>${escapeHtml(profile.about_me)}</p>` : ""}
+                        ${profile.racing_experience ? `<p><strong>Racing:</strong> ${escapeHtml(profile.racing_experience)}</p>` : ""}
+                        ${profile.boats ? `<p><strong>Boats:</strong> ${escapeHtml(profile.boats)}</p>` : ""}
+                        ${profile.qualifications ? `<p><strong>Qualifications:</strong> ${escapeHtml(profile.qualifications)}</p>` : ""}
+                        ${profile.availability ? `<p><strong>Availability:</strong> ${escapeHtml(profile.availability)}</p>` : ""}
+                        ${profile.contact_detail ? `<div class="contact-result"><strong>Contact:</strong> ${escapeHtml(profile.contact_method || "")} — ${escapeHtml(profile.contact_detail)}</div>` : ""}
+
+                        ${profileVoyages.length > 0 ? `
+                            <div class="profile-voyages">
+                                <h4>Sailing Logbook</h4>
+                                ${profileVoyages.map(function (voyage) {
+                                    return `
+                                        <div class="voyage-entry">
+                                            <strong>${escapeHtml(voyage.date || "")}</strong>
+                                            ${voyage.boat ? `<div>⛵ ${escapeHtml(voyage.boat)}</div>` : ""}
+                                            ${voyage.location ? `<div>📍 ${escapeHtml(voyage.location)}</div>` : ""}
+                                            ${voyage.miles !== null && voyage.miles !== undefined ? `<div>🌊 ${escapeHtml(String(voyage.miles))} nautical miles</div>` : ""}
+                                            ${voyage.notes ? `<div>${escapeHtml(voyage.notes)}</div>` : ""}
+                                        </div>
+                                    `;
+                                }).join("")}
+                            </div>
+                        ` : ""}
+                    </div>
                 </div>
             `;
         }).join("");
@@ -2328,6 +3538,15 @@ ${profile.preferred_sailing ? `<p><strong>Sailing:</strong> ${escapeHtml(profile
         results.innerHTML =
             "<div class='no-results'>Something went wrong while searching.</div>";
     }
+}
+
+function toggleProfileDetails(button) {
+    const details = button.nextElementSibling;
+    if (!details) return;
+
+    const isHidden = details.style.display === "none";
+    details.style.display = isHidden ? "block" : "none";
+    button.textContent = isHidden ? "Hide Profile" : "View Profile";
 }
 
     async function loadYourVoyages() {
@@ -2412,8 +3631,7 @@ if (!checkPasswordReset()) {
     }
 });
     
-updateLogbookStats();
-loadYourVoyages();
+updatePremiumUI();
 showHome();
 }
 
