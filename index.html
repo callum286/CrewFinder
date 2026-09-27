@@ -1,3 +1,69 @@
+Yep. Let's do it one step at a time so we don't accidentally configure anything wrong.
+
+Because you're 16, Stripe requires a legal guardian to become the account owner before the account can accept payments/payouts.
+
+Step 1 — Get your parent to create the Stripe account
+
+Use Stripe's official UK site:
+
+Create a Stripe account
+
+Have your parent do the signup, using the details they're comfortable putting on the Stripe account.
+
+When Stripe asks what the business is, you can describe it along the lines of:
+
+CrewFinder is an online platform connecting sailors, crew and yacht owners, with optional premium membership features.
+
+Don't make up a company registration number or business details if you don't have them.
+
+Stripe will ask for verification information as part of activating live payments.
+
+Step 2 — Use your CrewFinder website
+
+Stripe requires an online business to provide a URL for the website, social profile, or app used to promote/sell the service.
+
+So you can use:
+
+CrewFinder
+
+Step 3 — Don't create the prices yet
+
+Once the account is created and your parent has completed the verification questions, stop there and tell me.
+
+I'll then walk you through creating:
+
+Founding Member — £1/month
+Premium — £2.99/month
+Premium — £4.99/month
+
+Then we'll connect those to CrewFinder's existing Join for £1/month button and build the secure Stripe → Supabase system.
+
+Stripe doesn't charge a setup/monthly fee for its standard payment pricing; it charges transaction fees when payments happen.
+
+So for now: just get the parent-owned Stripe account created and verified. Don't change any CrewFinder code yet.
+
+Today 6:59 PM
+can you change all those buttons in the top right hand corner to be under a drop down menu button if yk what i mean istead of being clustered toegther
+
+Yep — exactly what you mean. I’ve changed the top-right navigation so it now shows:
+
+Home | How it works | Menu ▾
+
+Clicking Menu opens a clean dropdown containing:
+
+Create Profile
+Logbook
+Achievements
+Premium
+Log in
+My Profile
+
+It also closes automatically when you click elsewhere, and I kept the existing functionality/design intact.
+
+Download the updated CrewFinder file
+
+Replace your current HTML with this version and deploy it to Vercel.
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -1007,6 +1073,19 @@ footer {
     }
 }
 
+
+/* NAVIGATION DROPDOWN */
+.nav-menu { position: relative; display: inline-block; margin-left: 14px; }
+.nav-menu-button { border: 0; background: transparent; color: #10212b; font: inherit; cursor: pointer; padding: 8px 0; }
+.nav-menu-button:hover { color: #1683d8; }
+.nav-chevron { display: inline-block; margin-left: 4px; font-size: 15px; transition: transform 0.2s ease; }
+.nav-menu.open .nav-chevron { transform: rotate(180deg); }
+.nav-dropdown { display: none; position: absolute; top: calc(100% + 8px); right: 0; min-width: 175px; background: white; border: 1px solid #dfe7ec; border-radius: 12px; box-shadow: 0 12px 30px rgba(16, 33, 43, 0.12); padding: 7px; z-index: 1000; }
+.nav-menu.open .nav-dropdown { display: block; }
+.nav-dropdown a { display: block; margin: 0; padding: 10px 12px; border-radius: 8px; color: #10212b; text-decoration: none; white-space: nowrap; cursor: pointer; }
+.nav-dropdown a:hover { background: #f1f7fa; color: #1683d8; }
+@media (max-width: 800px) { .nav-menu { margin-left: 0; } }
+
 </style>
 
 </head>
@@ -1027,29 +1106,20 @@ footer {
             How it works
         </a>
 
-        <a onclick="showProfile()">
-            Create Profile
-        </a>
+        <div class="nav-menu">
+            <button class="nav-menu-button" onclick="toggleNavMenu(event)" aria-expanded="false" aria-controls="navDropdown">
+                Menu <span class="nav-chevron">⌄</span>
+            </button>
 
-        <a href="#logbook" onclick="openLogbook(); return false;">
-            Logbook
-        </a>
-
-        <a onclick="showAchievements()">
-            Achievements
-        </a>
-
-        <a onclick="showPremium()">
-            Premium
-        </a>
-
-        <a onclick="showLogin()">
-            Log in
-        </a>
-        
-        <a onclick="loadMyProfile()">
-            My Profile
-        </a>
+            <div id="navDropdown" class="nav-dropdown">
+                <a onclick="showProfile(); closeNavMenu();">Create Profile</a>
+                <a href="#logbook" onclick="openLogbook(); closeNavMenu(); return false;">Logbook</a>
+                <a onclick="showAchievements(); closeNavMenu();">Achievements</a>
+                <a onclick="showPremium(); closeNavMenu();">Premium</a>
+                <a onclick="showLogin(); closeNavMenu();">Log in</a>
+                <a onclick="loadMyProfile(); closeNavMenu();">My Profile</a>
+            </div>
+        </div>
 
     </nav>
 
@@ -2355,6 +2425,27 @@ async function openLogbook() {
 }
 
 
+
+function toggleNavMenu(event) {
+    event.stopPropagation();
+    const menu = document.querySelector(".nav-menu");
+    const button = document.querySelector(".nav-menu-button");
+    const isOpen = menu.classList.toggle("open");
+    button.setAttribute("aria-expanded", isOpen ? "true" : "false");
+}
+
+function closeNavMenu() {
+    const menu = document.querySelector(".nav-menu");
+    const button = document.querySelector(".nav-menu-button");
+    if (menu) menu.classList.remove("open");
+    if (button) button.setAttribute("aria-expanded", "false");
+}
+
+document.addEventListener("click", function (event) {
+    const menu = document.querySelector(".nav-menu");
+    if (menu && !menu.contains(event.target)) closeNavMenu();
+});
+
 /* ==================================================
    ACHIEVEMENTS
    ================================================== */
@@ -3639,3 +3730,5 @@ showHome();
 
 </body>
 </html>
+CrewFinder_dropdown.html
+HTML
