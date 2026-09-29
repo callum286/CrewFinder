@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Crew Finder | Find Your Next Yachting Adventure</title>
+<title>CrewFinder | Find Your Next Yachting Adventure</title>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
@@ -3182,6 +3182,9 @@ async function loadMyProfile() {
         document.getElementById("contactMethod").value = profile.contact_method || "Email";
         document.getElementById("contactDetail").value = profile.contact_detail || "";
 
+        document.getElementById("verificationCheckbox").checked =
+    profile.verified === true;
+        
         showProfile();
 
     } catch (error) {
@@ -3226,8 +3229,9 @@ async function updateProfile() {
         preferred_role: document.getElementById("preferredRole").value || null,
         preferred_sailing: document.getElementById("preferredSailing").value || null,
         availability: document.getElementById("availability").value.trim() || null,
-        contact_method: document.getElementById("contactMethod").value || null,
-        contact_detail: document.getElementById("contactDetail").value.trim() || null
+contact_method: document.getElementById("contactMethod").value || null,
+contact_detail: document.getElementById("contactDetail").value.trim() || null,
+verified: document.getElementById("verificationCheckbox").checked
     };
 
     if (!profileData.first_name || !profileData.last_name || !profileData.location) {
@@ -3649,10 +3653,18 @@ function escapeHtml(value) {
 
 if (!checkPasswordReset()) {
     
-    document.getElementById("verificationCheckbox").addEventListener("change", function () {
-    if (this.checked) {
-        alert("CrewFinder Verified is available with a subscription. Subscribe to unlock verification.");
-        this.checked = false;
+document.getElementById("verificationCheckbox").addEventListener("change", async function () {
+    const checkbox = this;
+    const premium = await getPremiumStatus();
+
+    if (!premium) {
+        alert("CrewFinder Verified is available with CrewFinder Premium.");
+        checkbox.checked = false;
+        return;
+    }
+
+    if (checkbox.checked) {
+        alert("CrewFinder Verified will be added when you save your profile.");
     }
 });
     
