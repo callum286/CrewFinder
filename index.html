@@ -438,6 +438,109 @@ textarea:focus {
     word-break: break-word;
 }
 
+/* PROFILE PHOTOS */
+.profile-photo-editor {
+    display:flex;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+}
+
+.profile-photo-preview {
+    width:88px;
+    height:88px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #dfe7ec;
+    background:#f1f5f7;
+    display:none;
+}
+
+.profile-photo-placeholder {
+    width:88px;
+    height:88px;
+    border-radius:50%;
+    background:#eef4f7;
+    color:#71858f;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    font-weight:700;
+}
+
+.search-profile-header {
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:8px;
+}
+
+.search-profile-photo {
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #dfe7ec;
+    background:#eef4f7;
+    flex-shrink:0;
+}
+
+.search-profile-initials {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    font-weight:700;
+    color:#607681;
+}
+
+.profile-details-photo {
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #dfe7ec;
+    cursor:zoom-in;
+    display:block;
+    margin-bottom:18px;
+}
+
+.profile-photo-modal {
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.78);
+    align-items:center;
+    justify-content:center;
+    z-index:3000;
+    padding:25px;
+}
+
+.profile-photo-modal.open {
+    display:flex;
+}
+
+.profile-photo-modal img {
+    max-width:min(90vw, 700px);
+    max-height:85vh;
+    border-radius:14px;
+    object-fit:contain;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.profile-photo-modal-close {
+    position:absolute;
+    top:18px;
+    right:24px;
+    color:white;
+    font-size:34px;
+    line-height:1;
+    cursor:pointer;
+    background:none;
+    border:0;
+}
+
 /* SEARCH RESULTS */
 
 .search-result {
@@ -1693,21 +1796,22 @@ footer {
 
                 <label>Profile photo</label>
 
-                <input
-                    type="file"
-                    id="photo"
-                    accept="image/*"
-                >
-
-                <small
-                    style="
-                        display:block;
-                        margin-top:8px;
-                        color:#71858f;
-                    "
-                >
-                    Photo upload will be added later.
-                </small>
+                <div class="profile-photo-editor">
+                    <div id="profilePhotoPlaceholder" class="profile-photo-placeholder">👤</div>
+                    <img id="profilePhotoPreview" class="profile-photo-preview" alt="Profile photo preview">
+                    <div>
+                        <input
+                            type="file"
+                            id="photo"
+                            accept="image/*"
+                        >
+                        <small
+                            style="display:block; margin-top:8px; color:#71858f;"
+                        >
+                            Your photo will appear as a circular profile picture.
+                        </small>
+                    </div>
+                </div>
 
             </div>
 
@@ -2230,6 +2334,11 @@ footer {
 
 </div>
 
+
+<div id="profilePhotoModal" class="profile-photo-modal" onclick="closeProfilePhotoModal(event)">
+    <button class="profile-photo-modal-close" onclick="closeProfilePhotoModal(event)" aria-label="Close">&times;</button>
+    <img id="profilePhotoModalImage" src="" alt="Enlarged profile photo">
+</div>
 
 <footer>
     © 2026 CrewFinder — Find your next yachting adventure.
@@ -3090,6 +3199,120 @@ async function logIn() {
 
 
 /* ==================================================
+   PROFILE PHOTOS
+   ================================================== */
+
+function setProfilePhotoPreview(url) {
+    const image = document.getElementById("profilePhotoPreview");
+    const placeholder = document.getElementById("profilePhotoPlaceholder");
+    if (!image || !placeholder) return;
+
+    if (url) {
+        image.src = url;
+        image.style.display = "block";
+        placeholder.style.display = "none";
+    } else {
+        image.removeAttribute("src");
+        image.style.display = "none";
+        placeholder.style.display = "flex";
+    }
+}
+
+function previewSelectedPhoto() {
+    const input = document.getElementById("photo");
+    if (!input || !input.files || !input.files[0]) return;
+
+    const reader = new FileReader();
+    reader.onload = function () {
+        setProfilePhotoPreview(reader.result);
+    };
+    reader.readAsDataURL(input.files[0]);
+}
+
+async function uploadProfilePhotoIfNeeded(userId, accessToken) {
+    const input = document.getElementById("photo");
+    if (!input || !input.files || !input.files[0]) {
+        const image = document.getElementById("profilePhotoPreview");
+        return image && image.src && image.src.startsWith("http") ? image.src : null;
+    }
+
+    const file = input.files[0];
+
+    if (!file.type.startsWith("image/")) {
+        throw new Error("Please choose an image file for your profile photo.");
+    }
+
+    const image = await new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+    });
+
+    const maxSize = 1200;
+    const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(image.width * scale);
+    canvas.height = Math.round(image.height * scale);
+
+    const context = canvas.getContext("2d");
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise(resolve =>
+        canvas.toBlob(resolve, "image/jpeg", 0.85)
+    );
+
+    URL.revokeObjectURL(image.src);
+
+    if (!blob) {
+        throw new Error("Could not process your profile photo.");
+    }
+
+    const path = userId + ".jpg";
+    const response = await fetch(
+        SUPABASE_URL + "/storage/v1/object/profile-photos/" + path,
+        {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + accessToken,
+                "apikey": SUPABASE_ANON_KEY,
+                "Content-Type": "image/jpeg",
+                "x-upsert": "true"
+            },
+            body: blob
+        }
+    );
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error("Could not upload profile photo: " + errorText);
+    }
+
+    return SUPABASE_URL + "/storage/v1/object/public/profile-photos/" + path;
+}
+
+function openProfilePhotoModal(url) {
+    const modal = document.getElementById("profilePhotoModal");
+    const image = document.getElementById("profilePhotoModalImage");
+    if (!modal || !image || !url) return;
+
+    image.src = url;
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+}
+
+function closeProfilePhotoModal(event) {
+    if (event && event.target && event.target.id === "profilePhotoModalImage") return;
+
+    const modal = document.getElementById("profilePhotoModal");
+    if (!modal) return;
+
+    modal.classList.remove("open");
+    document.body.style.overflow = "";
+}
+
+
+/* ==================================================
    LOAD EXISTING PROFILE
    ================================================== */
 
@@ -3134,7 +3357,7 @@ async function loadMyProfile() {
 
         document.getElementById("firstName").value = profile.first_name || "";
         document.getElementById("lastName").value = profile.last_name || "";
-        document.getElementById("location").value = profile.location || "";
+        document.getElementById("location").value = profile.sailing_club || "";
         document.getElementById("age").value = profile.age || "";
         document.getElementById("about").value = profile.about_me || "";
         document.getElementById("qualifications").value = profile.qualifications || "";
@@ -3145,12 +3368,12 @@ async function loadMyProfile() {
         document.getElementById("preferredSailing").value = profile.preferred_sailing || "";
         document.getElementById("availability").value = profile.availability || "";
         document.getElementById("contactMethod").value = profile.contact_method || "Email";
+        document.getElementById("contactDetail").value = profile.contact_detail || "";
         document.getElementById("travelDistance").value = profile.travel_distance || "";
-contact_detail: document.getElementById("contactDetail").value.trim() || null,
-travel_distance: document.getElementById("travelDistance").value || null
+        setProfilePhotoPreview(profile.avatar_url || "");
 
         document.getElementById("verificationCheckbox").checked =
-    profile.verified === true;
+            profile.verified === true;
         
         showProfile();
 
@@ -3186,7 +3409,7 @@ async function updateProfile() {
         user_id: userId,
         first_name: document.getElementById("firstName").value.trim(),
         last_name: document.getElementById("lastName").value.trim(),
-        location: document.getElementById("location").value.trim(),
+        sailing_club: document.getElementById("location").value.trim(),
         age: document.getElementById("age").value ? Number(document.getElementById("age").value) : null,
         about_me: document.getElementById("about").value.trim() || null,
         qualifications: document.getElementById("qualifications").value.trim() || null,
@@ -3198,12 +3421,14 @@ async function updateProfile() {
         availability: document.getElementById("availability").value.trim() || null,
 contact_method: document.getElementById("contactMethod").value || null,
 contact_detail: document.getElementById("contactDetail").value.trim() || null,
-verified: document.getElementById("verificationCheckbox").checked
+travel_distance: document.getElementById("travelDistance").value || null,
+        avatar_url: await uploadProfilePhotoIfNeeded(userId, accessToken),
+        verified: document.getElementById("verificationCheckbox").checked
     };
 
-    if (!profileData.first_name || !profileData.last_name || !profileData.location) {
+    if (!profileData.first_name || !profileData.last_name || !profileData.sailing_club) {
         errorMessage.textContent =
-            "Please complete your first name, last name and location.";
+            "Please complete your first name, last name and sailing club.";
         errorMessage.style.display = "block";
         window.scrollTo(0, 0);
         return;
@@ -3414,6 +3639,7 @@ async function searchCrew() {
     const sailing = document.getElementById("searchSailing").value;
     const availability = document.getElementById("searchAvailability").value.trim().toLowerCase();
     const travelDistance = document.getElementById("searchTravelDistance").value;
+
     results.innerHTML = "<div class='no-results'>Searching crew...</div>";
 
     try {
@@ -3463,223 +3689,34 @@ async function searchCrew() {
                 profile.preferred_sailing === sailing ||
                 profile.preferred_sailing === "Anything!";
 
-          const availabilityMatches =
-    !availability ||
-    (profile.availability &&
-     profile.availability.toLowerCase().includes(availability));
+            const availabilityMatches =
+                !availability ||
+                (profile.availability &&
+                 profile.availability.toLowerCase().includes(availability));
 
-const travelMatches =
-    !travelDistance ||
-    profile.travel_distance === travelDistance ||
-    (
-        travelDistance !== "uk" &&
-        travelDistance !== "europe" &&
-        travelDistance !== "world" &&
-        Number(profile.travel_distance) >= Number(travelDistance)
-    ) ||
-    (
-        travelDistance === "uk" &&
-        ["uk", "europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "europe" &&
-        ["europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "world" &&
-        profile.travel_distance === "world"
-    );
+            const travelMatches =
+                !travelDistance ||
+                profile.travel_distance === travelDistance ||
+                (
+                    travelDistance !== "uk" &&
+                    travelDistance !== "europe" &&
+                    travelDistance !== "world" &&
+                    Number(profile.travel_distance) >= Number(travelDistance)
+                ) ||
+                (
+                    travelDistance === "uk" &&
+                    ["uk", "europe", "world"].includes(profile.travel_distance)
+                ) ||
+                (
+                    travelDistance === "europe" &&
+                    ["europe", "world"].includes(profile.travel_distance)
+                ) ||
+                (
+                    travelDistance === "world" &&
+                    profile.travel_distance === "world"
+                );
 
-return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
-    !availability ||
-    (profile.availability &&
-     profile.availability.toLowerCase().includes(availability));
-
-const travelMatches =
-    !travelDistance ||
-    profile.travel_distance === travelDistance ||
-    (
-        travelDistance !== "uk" &&
-        travelDistance !== "europe" &&
-        travelDistance !== "world" &&
-        Number(profile.travel_distance) >= Number(travelDistance)
-    ) ||
-    (
-        travelDistance === "uk" &&
-        ["uk", "europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "europe" &&
-        ["europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "world" &&
-        profile.travel_distance === "world"
-    );
-
-return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
-    !availability ||
-    (profile.availability &&
-     profile.availability.toLowerCase().includes(availability));
-
-const travelMatches =
-    !travelDistance ||
-    profile.travel_distance === travelDistance ||
-    (
-        travelDistance !== "uk" &&
-        travelDistance !== "europe" &&
-        travelDistance !== "world" &&
-        Number(profile.travel_distance) >= Number(travelDistance)
-    ) ||
-    (
-        travelDistance === "uk" &&
-        ["uk", "europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "europe" &&
-        ["europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "world" &&
-        profile.travel_distance === "world"
-    );
-
-return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
-    !availability ||
-    (profile.availability &&
-     profile.availability.toLowerCase().includes(availability));
-
-const travelMatches =
-    !travelDistance ||
-    profile.travel_distance === travelDistance ||
-    (
-        travelDistance !== "uk" &&
-        travelDistance !== "europe" &&
-        travelDistance !== "world" &&
-        Number(profile.travel_distance) >= Number(travelDistance)
-    ) ||
-    (
-        travelDistance === "uk" &&
-        ["uk", "europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "europe" &&
-        ["europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "world" &&
-        profile.travel_distance === "world"
-    );
-
-return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
-    !availability ||
-    (profile.availability &&
-     profile.availability.toLowerCase().includes(availability));
-
-const travelMatches =
-    !travelDistance ||
-    profile.travel_distance === travelDistance ||
-    (
-        travelDistance !== "uk" &&
-        travelDistance !== "europe" &&
-        travelDistance !== "world" &&
-        Number(profile.travel_distance) >= Number(travelDistance)
-    ) ||
-    (
-        travelDistance === "uk" &&
-        ["uk", "europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "europe" &&
-        ["europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "world" &&
-        profile.travel_distance === "world"
-    );
-
-return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
-    !availability ||
-    (profile.availability &&
-     profile.availability.toLowerCase().includes(availability));
-
-const travelMatches =
-    !travelDistance ||
-    profile.travel_distance === travelDistance ||
-    (
-        travelDistance !== "uk" &&
-        travelDistance !== "europe" &&
-        travelDistance !== "world" &&
-        Number(profile.travel_distance) >= Number(travelDistance)
-    ) ||
-    (
-        travelDistance === "uk" &&
-        ["uk", "europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "europe" &&
-        ["europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "world" &&
-        profile.travel_distance === "world"
-    );
-
-return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
-    !availability ||
-    (profile.availability &&
-     profile.availability.toLowerCase().includes(availability));
-
-const travelMatches =
-    !travelDistance ||
-    profile.travel_distance === travelDistance ||
-    (
-        travelDistance !== "uk" &&
-        travelDistance !== "europe" &&
-        travelDistance !== "world" &&
-        Number(profile.travel_distance) >= Number(travelDistance)
-    ) ||
-    (
-        travelDistance === "uk" &&
-        ["uk", "europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "europe" &&
-        ["europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "world" &&
-        profile.travel_distance === "world"
-    );
-
-return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
-    !availability ||
-    (profile.availability &&
-     profile.availability.toLowerCase().includes(availability));
-
-const travelMatches =
-    !travelDistance ||
-    profile.travel_distance === travelDistance ||
-    (
-        travelDistance !== "uk" &&
-        travelDistance !== "europe" &&
-        travelDistance !== "world" &&
-        Number(profile.travel_distance) >= Number(travelDistance)
-    ) ||
-    (
-        travelDistance === "uk" &&
-        ["uk", "europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "europe" &&
-        ["europe", "world"].includes(profile.travel_distance)
-    ) ||
-    (
-        travelDistance === "world" &&
-        profile.travel_distance === "world"
-    );
-
-return roleMatches && sailingMatches && availabilityMatches && travelMatches;
+            return roleMatches && sailingMatches && availabilityMatches && travelMatches;
         });
 
         if (filteredProfiles.length === 0) {
@@ -3693,12 +3730,22 @@ return roleMatches && sailingMatches && availabilityMatches && travelMatches;
                 return voyage.user_id === profile.user_id;
             });
 
+            const firstName = profile.first_name || "";
+            const lastName = profile.last_name || "";
+            const initials = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || "👤";
+            const photoHtml = profile.avatar_url
+                ? `<img class="search-profile-photo" src="${escapeHtml(profile.avatar_url)}" alt="Profile photo of ${escapeHtml(firstName)}" loading="lazy">`
+                : `<div class="search-profile-photo search-profile-initials">${escapeHtml(initials)}</div>`;
+
             return `
                 <div class="search-result">
-                    <h3>
-                        ${escapeHtml(profile.first_name || "")} ${escapeHtml(profile.last_name || "")}
-                        ${profile.verified ? '<span class="verified-badge">✓</span>' : ""}
-                    </h3>
+                    <div class="search-profile-header">
+                        ${photoHtml}
+                        <h3>
+                            ${escapeHtml(firstName)} ${escapeHtml(lastName)}
+                            ${profile.verified ? '<span class="verified-badge">✓</span>' : ""}
+                        </h3>
+                    </div>
 
                     <div class="location">
                         ${escapeHtml(profile.location || "")}
@@ -3712,6 +3759,7 @@ return roleMatches && sailingMatches && availabilityMatches && travelMatches;
                     </button>
 
                     <div class="profile-details" style="display:none;">
+                        ${profile.avatar_url ? `<img class="profile-details-photo" src="${escapeHtml(profile.avatar_url)}" alt="Profile photo of ${escapeHtml(firstName)}" onclick="openProfilePhotoModal('${escapeHtml(profile.avatar_url)}')">` : ""}
                         ${profile.about_me ? `<p>${escapeHtml(profile.about_me)}</p>` : ""}
                         ${profile.racing_experience ? `<p><strong>Racing:</strong> ${escapeHtml(profile.racing_experience)}</p>` : ""}
                         ${profile.boats ? `<p><strong>Boats:</strong> ${escapeHtml(profile.boats)}</p>` : ""}
@@ -3864,6 +3912,11 @@ async function loadSailingClubs() {
 /* ==================================================
    START APP
    ================================================== */
+
+const photoInput = document.getElementById("photo");
+if (photoInput) {
+    photoInput.addEventListener("change", previewSelectedPhoto);
+}
 
 if (!checkPasswordReset()) {
         loadSailingClubs();
