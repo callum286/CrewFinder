@@ -1934,6 +1934,37 @@ footer {
                 >
 
             </div>
+            <div class="form-group full">
+
+    <label>Availability</label>
+
+    <input
+        type="text"
+        id="searchAvailability"
+        placeholder="e.g. weekends, school holidays, flexible"
+    >
+
+</div>
+
+
+<div class="form-group">
+
+    <label>Maximum travel distance</label>
+
+    <select id="searchTravelDistance">
+        <option value="">Any distance</option>
+        <option value="5">Up to 5 miles</option>
+        <option value="10">Up to 10 miles</option>
+        <option value="25">Up to 25 miles</option>
+        <option value="50">Up to 50 miles</option>
+        <option value="100">Up to 100 miles</option>
+        <option value="250">Up to 250 miles</option>
+        <option value="uk">Anywhere in the UK</option>
+        <option value="europe">Anywhere in Europe</option>
+        <option value="world">Anywhere in the world</option>
+    </select>
+
+</div>
 
         </div>
 
@@ -3382,7 +3413,7 @@ async function searchCrew() {
     const role = document.getElementById("searchRole").value;
     const sailing = document.getElementById("searchSailing").value;
     const availability = document.getElementById("searchAvailability").value.trim().toLowerCase();
-
+    const travelDistance = document.getElementById("searchTravelDistance").value;
     results.innerHTML = "<div class='no-results'>Searching crew...</div>";
 
     try {
@@ -3432,12 +3463,223 @@ async function searchCrew() {
                 profile.preferred_sailing === sailing ||
                 profile.preferred_sailing === "Anything!";
 
-            const availabilityMatches =
-                !availability ||
-                (profile.availability &&
-                 profile.availability.toLowerCase().includes(availability));
+          const availabilityMatches =
+    !availability ||
+    (profile.availability &&
+     profile.availability.toLowerCase().includes(availability));
 
-            return roleMatches && sailingMatches && availabilityMatches;
+const travelMatches =
+    !travelDistance ||
+    profile.travel_distance === travelDistance ||
+    (
+        travelDistance !== "uk" &&
+        travelDistance !== "europe" &&
+        travelDistance !== "world" &&
+        Number(profile.travel_distance) >= Number(travelDistance)
+    ) ||
+    (
+        travelDistance === "uk" &&
+        ["uk", "europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "europe" &&
+        ["europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "world" &&
+        profile.travel_distance === "world"
+    );
+
+return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
+    !availability ||
+    (profile.availability &&
+     profile.availability.toLowerCase().includes(availability));
+
+const travelMatches =
+    !travelDistance ||
+    profile.travel_distance === travelDistance ||
+    (
+        travelDistance !== "uk" &&
+        travelDistance !== "europe" &&
+        travelDistance !== "world" &&
+        Number(profile.travel_distance) >= Number(travelDistance)
+    ) ||
+    (
+        travelDistance === "uk" &&
+        ["uk", "europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "europe" &&
+        ["europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "world" &&
+        profile.travel_distance === "world"
+    );
+
+return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
+    !availability ||
+    (profile.availability &&
+     profile.availability.toLowerCase().includes(availability));
+
+const travelMatches =
+    !travelDistance ||
+    profile.travel_distance === travelDistance ||
+    (
+        travelDistance !== "uk" &&
+        travelDistance !== "europe" &&
+        travelDistance !== "world" &&
+        Number(profile.travel_distance) >= Number(travelDistance)
+    ) ||
+    (
+        travelDistance === "uk" &&
+        ["uk", "europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "europe" &&
+        ["europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "world" &&
+        profile.travel_distance === "world"
+    );
+
+return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
+    !availability ||
+    (profile.availability &&
+     profile.availability.toLowerCase().includes(availability));
+
+const travelMatches =
+    !travelDistance ||
+    profile.travel_distance === travelDistance ||
+    (
+        travelDistance !== "uk" &&
+        travelDistance !== "europe" &&
+        travelDistance !== "world" &&
+        Number(profile.travel_distance) >= Number(travelDistance)
+    ) ||
+    (
+        travelDistance === "uk" &&
+        ["uk", "europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "europe" &&
+        ["europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "world" &&
+        profile.travel_distance === "world"
+    );
+
+return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
+    !availability ||
+    (profile.availability &&
+     profile.availability.toLowerCase().includes(availability));
+
+const travelMatches =
+    !travelDistance ||
+    profile.travel_distance === travelDistance ||
+    (
+        travelDistance !== "uk" &&
+        travelDistance !== "europe" &&
+        travelDistance !== "world" &&
+        Number(profile.travel_distance) >= Number(travelDistance)
+    ) ||
+    (
+        travelDistance === "uk" &&
+        ["uk", "europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "europe" &&
+        ["europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "world" &&
+        profile.travel_distance === "world"
+    );
+
+return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
+    !availability ||
+    (profile.availability &&
+     profile.availability.toLowerCase().includes(availability));
+
+const travelMatches =
+    !travelDistance ||
+    profile.travel_distance === travelDistance ||
+    (
+        travelDistance !== "uk" &&
+        travelDistance !== "europe" &&
+        travelDistance !== "world" &&
+        Number(profile.travel_distance) >= Number(travelDistance)
+    ) ||
+    (
+        travelDistance === "uk" &&
+        ["uk", "europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "europe" &&
+        ["europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "world" &&
+        profile.travel_distance === "world"
+    );
+
+return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
+    !availability ||
+    (profile.availability &&
+     profile.availability.toLowerCase().includes(availability));
+
+const travelMatches =
+    !travelDistance ||
+    profile.travel_distance === travelDistance ||
+    (
+        travelDistance !== "uk" &&
+        travelDistance !== "europe" &&
+        travelDistance !== "world" &&
+        Number(profile.travel_distance) >= Number(travelDistance)
+    ) ||
+    (
+        travelDistance === "uk" &&
+        ["uk", "europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "europe" &&
+        ["europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "world" &&
+        profile.travel_distance === "world"
+    );
+
+return roleMatches && sailingMatches && availabilityMatches && travelMatches;const availabilityMatches =
+    !availability ||
+    (profile.availability &&
+     profile.availability.toLowerCase().includes(availability));
+
+const travelMatches =
+    !travelDistance ||
+    profile.travel_distance === travelDistance ||
+    (
+        travelDistance !== "uk" &&
+        travelDistance !== "europe" &&
+        travelDistance !== "world" &&
+        Number(profile.travel_distance) >= Number(travelDistance)
+    ) ||
+    (
+        travelDistance === "uk" &&
+        ["uk", "europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "europe" &&
+        ["europe", "world"].includes(profile.travel_distance)
+    ) ||
+    (
+        travelDistance === "world" &&
+        profile.travel_distance === "world"
+    );
+
+return roleMatches && sailingMatches && availabilityMatches && travelMatches;
         });
 
         if (filteredProfiles.length === 0) {
