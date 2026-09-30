@@ -1635,17 +1635,25 @@ footer {
             </div>
 
 
-            <div class="form-group">
+<div class="form-group">
 
-                <label>Location *</label>
+    <label>Sailing Club *</label>
 
-                <input
-                    type="text"
-                    id="location"
-                    placeholder="Sailing Club"
-                >
+    <input
+        type="text"
+        id="location"
+        list="sailingClubList"
+        placeholder="Type the full name of your sailing club"
+        autocomplete="off"
+    >
 
-            </div>
+    <datalist id="sailingClubList"></datalist>
+
+    <small style="display:block; margin-top:8px; color:#71858f;">
+        Can't find your sailing club? Get in contact and we'll add it.
+    </small>
+
+</div>
 
 
             <div class="form-group">
