@@ -85,7 +85,7 @@ nav a:hover {
 .advertisement-banner {
     margin: 18px auto 0;
     max-width: 900px;
-    padding: 9px 16px;
+    padding: 7px 14px;
     text-align: center;
     border: 1px solid #dfe7eb;
     border-radius: 6px;
@@ -306,7 +306,7 @@ section {
 
 .profile-heading p {
     color: #607681;
-    font-size: 18px;
+    font-size: 17px;
 }
 
 .form-card {
@@ -527,6 +527,211 @@ textarea:focus {
     border-radius:14px;
     object-fit:contain;
     box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+
+/* TERMS & CONDITIONS MODAL */
+.terms-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    background: rgba(16, 33, 43, 0.14);
+    z-index: 3000;
+    padding: 20px;
+}
+
+.terms-modal.open {
+    display: flex;
+}
+
+.terms-card {
+    width: min(700px, 100%);
+    height: 31vh;
+    min-height: 0;
+    max-height: 60vh;
+    background: white;
+    border: 1px solid #dfe7ec;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -10px 35px rgba(16, 33, 43, 0.14);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: height 0.25s ease;
+}
+
+.terms-card.expanded {
+    height: 82vh;
+}
+
+.terms-header {
+    padding: 7px 22px 5px;
+    border-bottom: 1px solid #e7edf0;
+    flex-shrink: 0;
+}
+
+.terms-header-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.terms-actions-top {
+    padding: 0;
+    border-top: 0;
+    background: transparent;
+    flex-shrink: 0;
+}
+
+.terms-actions-top .terms-secondary,
+.terms-actions-top .terms-primary {
+    white-space: nowrap;
+    padding: 6px 10px;
+    font-size: 11px;
+}
+
+.terms-header h2 {
+    margin: 0 0 2px;
+    font-size: 18px;
+}
+
+.terms-header p {
+    margin: 0;
+    color: #607681;
+    font-size: 11px;
+}
+
+.terms-body {
+    height: 58px;
+    flex: 0 0 58px;
+    overflow-y: auto;
+    padding: 7px 22px;
+}
+
+.terms-body h3 {
+    font-size: 14px;
+    margin: 10px 0 4px;
+}
+
+.terms-body h3:first-child {
+    margin-top: 0;
+}
+
+.terms-body p,
+.terms-body li {
+    color: #425963;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.terms-body ul {
+    margin-top: 6px;
+    padding-left: 20px;
+}
+
+.terms-more-wrap {
+    padding: 2px 22px 0;
+    border-top: 1px solid #e7edf0;
+    background: white;
+    flex-shrink: 0;
+}
+
+.terms-more-button {
+    border: 0;
+    background: transparent;
+    color: #1683d8;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.terms-more-button:hover {
+    text-decoration: underline;
+}
+
+.terms-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 6px 22px 8px;
+    border-top: 1px solid #e7edf0;
+    background: white;
+    flex-shrink: 0;
+}
+
+.terms-secondary {
+    border: 1px solid #d7e1e6;
+    background: white;
+    color: #425963;
+    border-radius: 8px;
+    padding: 7px 12px;
+    cursor: pointer;
+    font: inherit;
+}
+
+.terms-primary {
+    border: 0;
+    background: #1683d8;
+    color: white;
+    border-radius: 8px;
+    padding: 7px 14px;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600;
+}
+
+.terms-primary:hover {
+    background: #0f72bd;
+}
+
+.terms-link {
+    border: 0;
+    background: transparent;
+    color: #607681;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+}
+
+.terms-link:hover {
+    color: #1683d8;
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .terms-modal {
+        padding: 0;
+    }
+
+    .terms-card {
+        width: 100%;
+        height: 31vh;
+        min-height: 0;
+    }
+
+    .terms-card.expanded {
+        height: 80vh;
+    }
+
+    .terms-header-content {
+        gap: 8px;
+    }
+
+    .terms-actions-top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 5px;
+    }
+
+    .terms-actions-top .terms-secondary,
+    .terms-actions-top .terms-primary {
+        width: auto;
+        flex: 0 0 auto;
+    }
 }
 
 .profile-photo-modal-close {
@@ -2340,10 +2545,133 @@ footer {
     <img id="profilePhotoModalImage" src="" alt="Enlarged profile photo">
 </div>
 
+
+
+<!-- TERMS & CONDITIONS MODAL -->
+<div id="termsModal" class="terms-modal" onclick="closeTermsModal(event)">
+    <div id="termsCard" class="terms-card" onclick="event.stopPropagation()">
+        <div class="terms-header">
+            <div class="terms-header-content">
+                <div>
+                    <h2>CrewFinder Terms &amp; Conditions</h2>
+                    <p>Please read these terms before creating your CrewFinder account.</p>
+                </div>
+                <div class="terms-actions terms-actions-top">
+                    <button class="terms-secondary" onclick="closeTermsModal(event)">Not now</button>
+                    <button class="terms-primary" onclick="acceptTermsAndContinue(event)">I agree and create my account</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="terms-body" id="termsBody">
+            <h3>1. Purpose of CrewFinder</h3>
+            <p>
+                CrewFinder is an online platform designed to help sailors, skippers and crew members
+                discover potential sailing connections and make initial contact with one another.
+                CrewFinder provides the platform for making those connections; it does not itself arrange,
+                supervise or guarantee any sailing partnership, voyage, crew position or other arrangement
+                between users.
+            </p>
+
+            <h3>2. Independent decisions and suitability</h3>
+            <p>
+                Each user is responsible for deciding whether another user is suitable for any proposed
+                sailing partnership or other arrangement. Information supplied in user profiles is provided
+                by users themselves and should not be treated as an independent guarantee of a person's
+                experience, qualifications, character, suitability or conduct unless CrewFinder expressly
+                identifies particular information as verified. Users should make their own enquiries and
+                satisfy themselves that any proposed arrangement is appropriate before proceeding.
+            </p>
+
+            <h3>3. No guarantee of compatibility or success</h3>
+            <p>
+                CrewFinder does not guarantee that users introduced through the platform will be compatible,
+                that a proposed partnership will be successful, or that either party will be satisfied with
+                the resulting arrangement. Differences in experience, expectations, communication, availability,
+                sailing ability or other circumstances may arise. CrewFinder is not responsible for the success,
+                failure, continuation or termination of a partnership or arrangement formed independently
+                between users, except where responsibility cannot lawfully be excluded or limited.
+            </p>
+
+            <h3>4. Responsibility for arrangements</h3>
+            <p>
+                Any decision to contact, meet, sail with or otherwise enter into an arrangement with another
+                user is made by the individuals concerned. CrewFinder is not a party to agreements or
+                arrangements made between users and does not accept responsibility for the actions, omissions,
+                representations or conduct of users in connection with arrangements made independently
+                between them. Users should exercise appropriate judgement and take reasonable precautions
+                before meeting or sailing with someone they have encountered through CrewFinder.
+            </p>
+
+            <h3>5. Sailing safety</h3>
+            <p>
+                CrewFinder does not replace the responsibility of users to make appropriate safety assessments
+                or to comply with applicable sailing regulations, club requirements, maritime law, insurance
+                requirements or other relevant rules. Users remain responsible for determining whether they,
+                their equipment and any proposed crew or skipper are appropriately prepared and suitable for
+                the intended activity.
+            </p>
+
+            <h3>6. Dating and romantic use</h3>
+            <p>
+                CrewFinder is not a dating, matchmaking or romantic networking service. The platform is
+                intended solely for genuine sailing-related connections. Users must not use CrewFinder primarily
+                to seek romantic or sexual relationships, or use a sailing-related connection as a pretext for
+                unwanted romantic or sexual interaction. Unwanted advances, harassment, inappropriate messages
+                or other conduct inconsistent with the purpose of the platform may result in content or accounts
+                being restricted or removed.
+            </p>
+
+            <h3>7. User conduct and information</h3>
+            <p>
+                Users must provide information that is accurate and not knowingly misleading. Users must not
+                use CrewFinder to harass, intimidate, threaten, deceive or otherwise cause harm to another user.
+                CrewFinder may remove content or restrict, suspend or terminate access where it reasonably
+                considers that these Terms have been breached or that action is necessary to protect users
+                or the integrity of the platform, subject to applicable law.
+            </p>
+
+            <h3>8. Verification</h3>
+            <p>
+                Where CrewFinder provides verification features, verification indicates only that the relevant
+                information or requirement has been checked in accordance with the applicable CrewFinder
+                verification process. Verification is not a guarantee of a user's character, competence,
+                suitability or future conduct and should not be interpreted as such.
+            </p>
+
+            <h3>9. Responsibility and legal rights</h3>
+            <p>
+                To the fullest extent permitted by applicable law, CrewFinder is not responsible for losses,
+                disputes, dissatisfaction, incompatibility, failed partnerships or other consequences arising
+                from arrangements entered into independently between users. Nothing in these Terms is intended
+                to exclude or limit any liability or legal right that cannot lawfully be excluded or limited.
+            </p>
+
+            <h3>10. Acceptance</h3>
+            <p>
+                By selecting “I agree and create my account”, you confirm that you have had an opportunity
+                to read these Terms &amp; Conditions and agree to be bound by them. You understand that CrewFinder's
+                role is to facilitate sailing-related connections and that the suitability and success of any
+                resulting partnership is ultimately a matter for the individuals involved.
+            </p>
+        </div>
+
+        <div class="terms-more-wrap">
+            <button id="termsMoreButton" class="terms-more-button" onclick="toggleTermsExpanded()">
+                Show more ↓
+            </button>
+        </div>
+
+
+    </div>
+</div>
+
 <footer>
     © 2026 CrewFinder — Find your next yachting adventure.
     <br>
     Contact: <a href="mailto:callumianaldridge@gmail.com">callumianaldridge@gmail.com</a>
+    <br>
+    <button class="terms-link" onclick="openTermsModal('view')">Terms &amp; Conditions</button>
 </footer>
 
 
@@ -3091,7 +3419,77 @@ async function updatePassword() {
    ACCOUNT / SIGN UP
    ================================================== */
 
-async function signUp() {
+function hasAcceptedTerms() {
+    return localStorage.getItem("crewfinder_terms_accepted") === "true";
+}
+
+function openTermsModal(mode) {
+    const modal = document.getElementById("termsModal");
+    const card = document.getElementById("termsCard");
+    const moreButton = document.getElementById("termsMoreButton");
+
+    if (!modal || !card) return;
+
+    card.classList.remove("expanded");
+    if (moreButton) {
+        moreButton.textContent = "Show more ↓";
+    }
+
+    const acceptButton = document.querySelector(".terms-primary");
+    if (acceptButton) {
+        acceptButton.style.display = mode === "view" ? "none" : "block";
+        acceptButton.textContent =
+            mode === "signup"
+                ? "I agree and create my account"
+                : "I agree and continue";
+    }
+
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+}
+
+function closeTermsModal() {
+    const modal = document.getElementById("termsModal");
+    if (!modal) return;
+
+    modal.classList.remove("open");
+    document.body.style.overflow = "";
+}
+
+function toggleTermsExpanded() {
+    const card = document.getElementById("termsCard");
+    const button = document.getElementById("termsMoreButton");
+    if (!card || !button) return;
+
+    const expanded = card.classList.toggle("expanded");
+    button.textContent = expanded ? "Show less ↑" : "Show more ↓";
+}
+
+function signUp() {
+    if (!hasAcceptedTerms()) {
+        openTermsModal("signup");
+        return;
+    }
+
+    createAccount();
+}
+
+function acceptTermsAndContinue() {
+    localStorage.setItem("crewfinder_terms_accepted", "true");
+
+    const acceptButton = document.querySelector(".terms-primary");
+    const mode = acceptButton && acceptButton.textContent.includes("create my account")
+        ? "signup"
+        : "home";
+
+    closeTermsModal();
+
+    if (mode === "signup") {
+        createAccount();
+    }
+}
+
+async function createAccount() {
     const email = document.getElementById("authEmail").value.trim();
     const password = document.getElementById("authPassword").value;
     const message = document.getElementById("authMessage");
@@ -3937,6 +4335,12 @@ document.getElementById("verificationCheckbox").addEventListener("change", async
     
 updatePremiumUI();
 showHome();
+
+if (!hasAcceptedTerms()) {
+    setTimeout(function () {
+        openTermsModal("home");
+    }, 150);
+}
 }
 
 </script>
