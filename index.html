@@ -3561,14 +3561,50 @@ function escapeHtml(value) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+async function loadSailingClubs() {
+    const list = document.getElementById("sailingClubList");
 
+    if (!list) return;
+
+    try {
+        const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/clubs?select=official_name&order=official_name.asc`,
+            {
+                headers: {
+                    apikey: SUPABASE_ANON_KEY
+                }
+            }
+        );
+
+        if (!response.ok) {
+            console.error("Could not load sailing clubs.");
+            return;
+        }
+
+        const clubs = await response.json();
+
+        list.innerHTML = "";
+
+        clubs.forEach(club => {
+            if (!club.official_name) return;
+
+            const option = document.createElement("option");
+            option.value = club.official_name;
+
+            list.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error("Error loading sailing clubs:", error);
+    }
+}
 
 /* ==================================================
    START APP
    ================================================== */
 
 if (!checkPasswordReset()) {
-    
+        loadSailingClubs();
 document.getElementById("verificationCheckbox").addEventListener("change", async function () {
     const checkbox = this;
     const premium = await getPremiumStatus();
