@@ -1131,6 +1131,34 @@ textarea:focus {
     margin-left: 6px;
 }
 
+.gpx-import-panel {
+    margin-top: 18px;
+    padding: 18px;
+    border: 1px solid #dfe7ec;
+    border-radius: 12px;
+    background: #fbfdfe;
+}
+
+.gpx-import-panel h4 {
+    margin-bottom: 6px;
+    color: #173042;
+}
+
+.gpx-import-panel p {
+    color: #607681;
+    margin-bottom: 14px;
+}
+
+.gpx-import-panel input[type="file"] {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.gpx-import-panel .button {
+    margin-right: 8px;
+}
+
 .strava-panel {
     margin-top: 18px;
     padding: 18px;
@@ -1785,6 +1813,14 @@ footer {
                 <button class="button primary" onclick="addVoyage()">
                     Add Journey
                 </button>
+            </div>
+
+            <div class="gpx-import-panel">
+                <h4>Import a Strava GPX</h4>
+                <p>Export a Strava activity as a GPX file, then upload it here to put the real recorded route on your CrewFinder map.</p>
+                <input type="file" id="gpxFileInput" accept=".gpx,application/gpx+xml,application/xml,text/xml">
+                <button type="button" class="button primary" onclick="importGpxFile()">Import GPX activity</button>
+                <div id="gpxImportStatus" class="strava-status" aria-live="polite"></div>
             </div>
 
             <div id="stravaPanel" class="strava-panel" style="display:none;">
@@ -4632,6 +4668,7 @@ function toggleProfileDetails(button) {
                 <div class="voyage-entry">
                     <strong>${escapeHtml(voyage.date || "")}</strong>
                     ${source === "strava" ? '<div class="voyage-source">↗ Imported from Strava</div>' : ""}
+                    ${source === "gpx" ? '<div class="voyage-source">↗ Imported from Strava GPX</div>' : ""}
                     ${voyage.boat ? `<div>⛵ ${escapeHtml(voyage.boat)}</div>` : ""}
                     ${voyage.strava_activity_name ? `<div>🏄 ${escapeHtml(voyage.strava_activity_name)}</div>` : ""}
                     ${voyage.strava_sport_type ? `<div>🏷 ${escapeHtml(voyage.strava_sport_type)}</div>` : ""}
@@ -4642,7 +4679,7 @@ function toggleProfileDetails(button) {
                     ${voyage.strava_elevation_gain !== null && voyage.strava_elevation_gain !== undefined ? `<div>↗ ${escapeHtml(String(Math.round(Number(voyage.strava_elevation_gain))))} m elevation</div>` : ""}
                     ${voyage.notes ? `<div>${escapeHtml(voyage.notes)}</div>` : ""}
                     ${voyage.strava_activity_url ? `<div style="margin-top:8px;"><a href="${escapeHtml(voyage.strava_activity_url)}" target="_blank" rel="noopener noreferrer" style="color:#fc4c02;text-decoration:none;font-weight:700;">View on Strava ↗</a></div>` : ""}
-                    ${routePoints.length >= 2 ? `<div id="${miniMapId}" class="voyage-mini-map"></div>` : (source === "strava" ? '<div class="voyage-mini-map-empty">No GPS route was available for this Strava activity.</div>' : "")}
+                    ${routePoints.length >= 2 ? `<div id="${miniMapId}" class="voyage-mini-map"></div>` : ((source === "strava" || source === "gpx") ? '<div class="voyage-mini-map-empty">No GPS route was available for this activity.</div>' : "")}
                 </div>
             `;
         }).join("");
@@ -4735,6 +4772,189 @@ function initialiseVoyageMiniMap(elementId, routePoints) {
 }
 
 
+
+
+/* ==================================================
+   GPX IMPORT
+   ================================================== */
+
+function calculateGpxDistanceNm(points) {
+    let metres = 0;
+    const earthRadius = 6371000;
+
+    function toRadians(value) {
+        return value * Math.PI / 180;
+    }
+
+    for (let i = 1; i < points.length; i++) {
+        const previous = points[i - 1];
+        const current = points[i];
+
+        const lat1 = toRadians(previous.lat);
+        const lat2 = toRadians(current.lat);
+        const deltaLat = toRadians(current.lat - previous.lat);
+        const deltaLng = toRadians(current.lng - previous.lng);
+
+        const a =
+            Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+            Math.cos(lat1) * Math.cos(lat2) *
+            Math.sin(deltaLng / 2) * Math.sin(deltaLng / 2);
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        metres += earthRadius * c;
+    }
+
+    return metres / 1852;
+}
+
+function downsampleGpxPoints(points, maxPoints) {
+    if (points.length <= maxPoints) return points;
+
+    const result = [];
+    const step = (points.length - 1) / (maxPoints - 1);
+
+    for (let i = 0; i < maxPoints; i++) {
+        result.push(points[Math.round(i * step)]);
+    }
+
+    return result;
+}
+
+function parseGpxFile(text) {
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(text, "application/xml");
+
+    if (xml.querySelector("parsererror")) {
+        throw new Error("That file does not appear to be a valid GPX file.");
+    }
+
+    const trackPoints = Array.from(xml.getElementsByTagNameNS("*", "trkpt"));
+    const routePoints = trackPoints.map(function (point) {
+        const lat = Number(point.getAttribute("lat"));
+        const lng = Number(point.getAttribute("lon"));
+        const timeElement = point.getElementsByTagNameNS("*", "time")[0];
+
+        return {
+            lat: lat,
+            lng: lng,
+            time: timeElement ? timeElement.textContent.trim() : ""
+        };
+    }).filter(function (point) {
+        return Number.isFinite(point.lat) && Number.isFinite(point.lng);
+    });
+
+    if (routePoints.length < 2) {
+        throw new Error("No usable GPS route was found in that GPX file.");
+    }
+
+    const nameElement = xml.getElementsByTagNameNS("*", "name")[0];
+    const name = nameElement ? nameElement.textContent.trim() : "";
+    const firstTime = routePoints.find(function (point) { return point.time; });
+
+    return {
+        name: name,
+        date: firstTime && firstTime.time ? firstTime.time.slice(0, 10) : "",
+        points: downsampleGpxPoints(routePoints, 500).map(function (point) {
+            return { lat: point.lat, lng: point.lng };
+        }),
+        miles: calculateGpxDistanceNm(routePoints),
+        start: routePoints[0],
+        end: routePoints[routePoints.length - 1]
+    };
+}
+
+async function importGpxFile() {
+    const accessToken = localStorage.getItem("crewfinder_access_token");
+    const userId = localStorage.getItem("crewfinder_user_id");
+    const input = document.getElementById("gpxFileInput");
+    const status = document.getElementById("gpxImportStatus");
+
+    if (!accessToken || !userId) {
+        alert("Please log in before importing a GPX activity.");
+        showLogin();
+        return;
+    }
+
+    const premium = await getPremiumStatus();
+    if (!premium) {
+        alert("CrewFinder Premium is required to import GPX activities.");
+        showPremium();
+        return;
+    }
+
+    if (!input || !input.files || !input.files[0]) {
+        alert("Please choose a GPX file first.");
+        return;
+    }
+
+    const file = input.files[0];
+
+    if (!file.name.toLowerCase().endsWith(".gpx")) {
+        alert("Please choose a .gpx file.");
+        return;
+    }
+
+    try {
+        if (status) status.textContent = "Reading your GPX route...";
+
+        const text = await file.text();
+        const gpx = parseGpxFile(text);
+        const routePoints = gpx.points;
+
+        const date = gpx.date || new Date().toISOString().slice(0, 10);
+        const activityName = gpx.name || file.name.replace(/\.gpx$/i, "");
+        const startLocation = "GPS start";
+        const endLocation = "GPS end";
+
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/voyages",
+            {
+                method: "POST",
+                headers: {
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": "Bearer " + accessToken,
+                    "Content-Type": "application/json",
+                    "Prefer": "return=minimal"
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    date: date,
+                    boat: "",
+                    location: "Imported from Strava GPX",
+                    start_location: startLocation,
+                    end_location: endLocation,
+                    waypoints: [],
+                    miles: Number(gpx.miles.toFixed(2)),
+                    notes: activityName,
+                    source: "gpx",
+                    route_points: routePoints
+                })
+            }
+        );
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || "Could not save the GPX activity.");
+        }
+
+        if (status) {
+            status.textContent =
+                "Imported successfully — " +
+                Number(gpx.miles.toFixed(1)) +
+                " nautical miles added to your logbook and map.";
+        }
+
+        input.value = "";
+        await updateLogbookStats();
+        await loadYourVoyages();
+        await loadSailingMap();
+
+    } catch (error) {
+        console.error("GPX import error:", error);
+        if (status) status.textContent = "";
+        alert(error.message || "Could not import that GPX file.");
+    }
+}
 
 
 /* ==================================================
