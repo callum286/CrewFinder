@@ -469,11 +469,43 @@ textarea:focus {
     font-weight:700;
 }
 
+.search-result {
+    position:relative;
+}
+
 .search-profile-header {
     display:flex;
     align-items:center;
     gap:14px;
     margin-bottom:8px;
+    padding-right:42px;
+}
+
+.verified-badge {
+    position:absolute;
+    top:18px;
+    right:18px;
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    background:#1d9bf0;
+    border:2px solid #ffffff;
+    box-shadow:0 1px 3px rgba(0,0,0,.18);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    user-select:none;
+    -webkit-user-select:none;
+    pointer-events:none;
+}
+
+.verified-badge::before {
+    content:"✓";
+    color:#ffffff;
+    font-size:14px;
+    line-height:1;
+    font-weight:800;
+    transform:translateY(-.5px);
 }
 
 .search-profile-photo {
@@ -1045,13 +1077,38 @@ textarea:focus {
 
 .journey-fields {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 12px;
     margin-bottom: 12px;
 }
 
 .journey-fields input {
     width: 100%;
+}
+
+.waypoint-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.waypoint-row input {
+    flex: 1;
+}
+
+.waypoint-remove {
+    padding: 10px 14px;
+    background: #f3f5f6;
+    color: #52616b;
+    border: 1px solid #dfe7ec;
+}
+
+@media (max-width: 600px) {
+    .waypoint-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
 
 @media (max-width: 800px) {
@@ -1328,31 +1385,6 @@ footer {
 .nav-dropdown a:hover { background: #f1f7fa; color: #1683d8; }
 @media (max-width: 800px) { .nav-menu { margin-left: 0; } }
 
-
-.waypoint-row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.waypoint-row input {
-    flex: 1;
-}
-
-.waypoint-remove {
-    padding: 10px 14px;
-    background: #f3f5f6;
-    color: #52616b;
-    border: 1px solid #dfe7ec;
-}
-
-@media (max-width: 600px) {
-    .waypoint-row {
-        flex-direction: column;
-        align-items: stretch;
-    }
-}
 </style>
 
 </head>
@@ -3220,19 +3252,21 @@ async function loadSailingMap() {
             ].filter(Boolean);
 
             const routePoints = [];
+            const geocodedLocations = [];
 
             for (const routeLocation of routeLocations) {
                 const point = await geocodeLocation(routeLocation);
                 if (point) {
                     routePoints.push([point.lat, point.lng]);
                     points.push([point.lat, point.lng]);
+                    geocodedLocations.push({ location: routeLocation, point: point });
                 }
                 await new Promise(function(resolve) { setTimeout(resolve, 1100); });
             }
 
             if (routePoints.length < 2) continue;
 
-            L.polyline(
+            const line = L.polyline(
                 routePoints,
                 { weight: 4, opacity: 0.8 }
             ).addTo(sailingMapLayer);
@@ -3244,13 +3278,26 @@ async function loadSailingMap() {
                 (voyage.miles !== null && voyage.miles !== undefined ? "<br>🌊 " + escapeHtml(String(voyage.miles)) + " NM" : "")
             );
 
-            L.marker([start.lat, start.lng]).addTo(sailingMapLayer)
-                .bindPopup("<strong>Start</strong><br>" + escapeHtml(voyage.start_location));
+            const firstPoint = geocodedLocations[0];
+            const lastPoint = geocodedLocations[geocodedLocations.length - 1];
 
-            L.marker([end.lat, end.lng]).addTo(sailingMapLayer)
-                .bindPopup("<strong>End</strong><br>" + escapeHtml(voyage.end_location));
+            if (firstPoint) {
+                L.marker([firstPoint.point.lat, firstPoint.point.lng])
+                    .addTo(sailingMapLayer)
+                    .bindPopup("<strong>Start</strong><br>" + escapeHtml(firstPoint.location));
+            }
 
-            points.push([start.lat, start.lng], [end.lat, end.lng]);
+            geocodedLocations.slice(1, -1).forEach(function(item) {
+                L.circleMarker([item.point.lat, item.point.lng], { radius: 5 })
+                    .addTo(sailingMapLayer)
+                    .bindPopup("<strong>Waypoint</strong><br>" + escapeHtml(item.location));
+            });
+
+            if (lastPoint) {
+                L.marker([lastPoint.point.lat, lastPoint.point.lng])
+                    .addTo(sailingMapLayer)
+                    .bindPopup("<strong>End</strong><br>" + escapeHtml(lastPoint.location));
+            }
         }
 
         if (points.length) {
@@ -3944,28 +3991,28 @@ travel_distance: document.getElementById("travelDistance").value || null,
    FIND CREW
    ================================================== */
 
-    function addWaypoint() {
-        const container = document.getElementById("waypointsContainer");
-        if (!container) return;
+function addWaypoint() {
+    const container = document.getElementById("waypointsContainer");
+    if (!container) return;
 
-        const wrapper = document.createElement("div");
-        wrapper.className = "waypoint-row";
+    const wrapper = document.createElement("div");
+    wrapper.className = "waypoint-row";
 
-        const input = document.createElement("input");
-        input.type = "text";
-        input.className = "voyageWaypoint";
-        input.placeholder = "Waypoint location";
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "voyageWaypoint";
+    input.placeholder = "Waypoint location";
 
-        const removeButton = document.createElement("button");
-        removeButton.type = "button";
-        removeButton.className = "button waypoint-remove";
-        removeButton.textContent = "Remove";
-        removeButton.onclick = function () { wrapper.remove(); };
+    const removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.className = "button waypoint-remove";
+    removeButton.textContent = "Remove";
+    removeButton.onclick = function() { wrapper.remove(); };
 
-        wrapper.appendChild(input);
-        wrapper.appendChild(removeButton);
-        container.appendChild(wrapper);
-    }
+    wrapper.appendChild(input);
+    wrapper.appendChild(removeButton);
+    container.appendChild(wrapper);
+}
 
     async function addVoyage() {
     const date = document.getElementById("voyageDate").value;
@@ -3973,7 +4020,7 @@ travel_distance: document.getElementById("travelDistance").value || null,
     const startLocation = document.getElementById("voyageStart").value.trim();
     const endLocation = document.getElementById("voyageEnd").value.trim();
     const waypoints = Array.from(document.querySelectorAll(".voyageWaypoint"))
-        .map(function (input) { return input.value.trim(); })
+        .map(function(input) { return input.value.trim(); })
         .filter(Boolean);
     const location = document.getElementById("voyageLocation").value.trim();
     const miles = document.getElementById("voyageMiles").value;
@@ -4044,6 +4091,7 @@ travel_distance: document.getElementById("travelDistance").value || null,
         document.getElementById("voyageBoat").value = "";
         document.getElementById("voyageStart").value = "";
         document.getElementById("voyageEnd").value = "";
+        document.getElementById("waypointsContainer").innerHTML = "";
         document.getElementById("voyageLocation").value = "";
         document.getElementById("voyageMiles").value = "";
         document.getElementById("voyageNotes").value = "";
@@ -4208,8 +4256,8 @@ async function searchCrew() {
                         ${photoHtml}
                         <h3>
                             ${escapeHtml(firstName)} ${escapeHtml(lastName)}
-                            ${profile.verified ? '<span class="verified-badge">✓</span>' : ""}
                         </h3>
+                        ${profile.verified ? '<span class="verified-badge" title="CrewFinder Verified" aria-label="CrewFinder Verified"></span>' : ""}
                     </div>
 
                     <div class="location">
@@ -4414,5 +4462,3 @@ if (!hasAcceptedTerms()) {
 
 </body>
 </html>
-CrewFinder_dropdown.html
-HTML
