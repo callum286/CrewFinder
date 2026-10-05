@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>CrewFinder | Find Your Next Yachting Adventure</title>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <style>
 
@@ -1551,8 +1551,413 @@ footer {
 .nav-dropdown a:hover { background: #f1f7fa; color: #1683d8; }
 @media (max-width: 800px) { .nav-menu { margin-left: 0; } }
 
+
+/* =========================================================
+   CREWFINDER — ELEGANT VISUAL REDESIGN
+   Visual-only layer. Existing markup, IDs, JS and functionality
+   are intentionally left untouched.
+   ========================================================= */
+:root {
+    --cf-ink: #102a36;
+    --cf-ink-soft: #35515d;
+    --cf-muted: #6d8189;
+    --cf-ocean: #0f7180;
+    --cf-ocean-deep: #0b4654;
+    --cf-aqua: #79c7c4;
+    --cf-sand: #f3eee5;
+    --cf-cream: #fbfaf7;
+    --cf-white: #ffffff;
+    --cf-line: rgba(16,42,54,.12);
+    --cf-line-strong: rgba(16,42,54,.18);
+    --cf-shadow: 0 18px 55px rgba(13,42,53,.09);
+    --cf-shadow-soft: 0 8px 30px rgba(13,42,53,.07);
+    --cf-radius: 18px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--cf-ink);
+    background: var(--cf-cream);
+    letter-spacing: .005em;
+}
+
+h1,h2,h3,h4,.logo,.premium-eyebrow,.founder-label,.section-title,
+.profile-heading,.achievement-card h3,.premium-feature-grid strong,
+.stat strong,.button,.nav-menu-button,.nav-dropdown a,label {
+    font-family: 'DM Sans', sans-serif;
+}
+
+.logo, .hero h1, .logbook h2, .section-title h2, .profile-heading h1,
+.founder-offer-card h2, .premium-feature-grid strong, .achievement-card h3 {
+    letter-spacing: -.035em;
+}
+
+header {
+    background: rgba(251,250,247,.88);
+    border-bottom: 1px solid rgba(16,42,54,.09);
+    padding: 17px clamp(22px,6vw,78px);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 5px 25px rgba(16,42,54,.035);
+}
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -.055em;
+    color: var(--cf-ink);
+}
+.logo span { color: var(--cf-ocean); }
+nav { display:flex; align-items:center; gap: 4px; }
+nav a {
+    color: var(--cf-ink-soft);
+    margin-left: 0;
+    padding: 9px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+nav a:hover { color: var(--cf-ocean); background: rgba(15,113,128,.07); }
+
+.nav-menu { margin-left: 4px; }
+.nav-menu-button {
+    color: var(--cf-ink-soft);
+    padding: 9px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: color .2s ease, background .2s ease;
+}
+.nav-menu-button:hover { color: var(--cf-ocean); background: rgba(15,113,128,.07); }
+.nav-dropdown {
+    top: calc(100% + 12px);
+    min-width: 205px;
+    background: rgba(255,255,255,.96);
+    border: 1px solid var(--cf-line);
+    border-radius: 16px;
+    box-shadow: 0 22px 55px rgba(16,42,54,.15);
+    padding: 7px;
+    backdrop-filter: blur(18px);
+}
+.nav-dropdown a { padding: 11px 13px; border-radius: 10px; font-weight: 500; }
+.nav-dropdown a:hover { background: #eef6f5; color: var(--cf-ocean); }
+
+.hero {
+    min-height: 720px;
+    padding: clamp(85px,10vw,130px) 8%;
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(90deg, rgba(5,27,37,.93) 0%, rgba(5,27,37,.70) 48%, rgba(5,27,37,.22) 100%),
+        linear-gradient(180deg, rgba(5,27,37,.12), rgba(5,27,37,.42)),
+        url("https://raw.githubusercontent.com/callum286/CrewFinder/main/crewfinder-image.jpg");
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+.hero::after {
+    content:"";
+    position:absolute;
+    inset:auto 0 0 0;
+    height:120px;
+    background: linear-gradient(transparent, rgba(251,250,247,.16));
+    pointer-events:none;
+}
+.hero-content { max-width: 760px; position:relative; z-index:1; }
+.hero h1 {
+    font-family: 'Bodoni Moda', serif;
+    font-weight: 400;
+    font-size: clamp(54px,7.5vw,92px);
+    line-height: .94;
+    letter-spacing: -.055em;
+    margin-bottom: 30px;
+    text-wrap: balance;
+}
+.hero h1 span { color: #9be1dd; }
+.hero p {
+    font-size: clamp(17px,1.7vw,20px);
+    line-height: 1.7;
+    max-width: 610px;
+    color: rgba(247,252,252,.84);
+    margin-bottom: 36px;
+}
+.buttons { gap: 12px; }
+.button {
+    padding: 13px 21px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .005em;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+}
+.button:hover { transform: translateY(-2px); }
+.primary {
+    background: var(--cf-ocean);
+    color: white;
+    box-shadow: 0 10px 25px rgba(15,113,128,.23);
+}
+.primary:hover { background: #0b6370; box-shadow: 0 14px 30px rgba(15,113,128,.28); }
+.secondary {
+    border: 1px solid rgba(255,255,255,.48);
+    color: white;
+    background: rgba(255,255,255,.07);
+    backdrop-filter: blur(8px);
+}
+.secondary:hover { background: rgba(255,255,255,.92); color: var(--cf-ink); }
+.instagram-link { color: rgba(255,255,255,.72); font-size:13px; margin-top:20px; }
+.instagram-link:hover { color:#fff; }
+.member-button-wrap { margin-top: 12px; }
+.member-button { padding: 7px 15px; font-size: 12px; }
+
+.advertisement-banner {
+    margin: 14px auto 0;
+    max-width: 900px;
+    padding: 7px 14px;
+    border: 1px solid var(--cf-line);
+    border-radius: 999px;
+    background: rgba(255,255,255,.72);
+    color: #788b91;
+    font-family: 'DM Sans',sans-serif;
+    font-size: 10px;
+}
+.advertisement-banner a { color: var(--cf-ink-soft); }
+
+.premium-home-promo {
+    max-width: 1050px;
+    margin: 18px auto 0;
+    padding: 14px 18px;
+    border: 1px solid rgba(15,113,128,.15);
+    border-radius: 14px;
+    background: linear-gradient(90deg,#f5faf9,#fbfaf7);
+    color: var(--cf-muted);
+    font-size: 13px;
+    box-shadow: var(--cf-shadow-soft);
+}
+.premium-home-promo strong { color:var(--cf-ink); }
+.premium-home-button { border:1px solid var(--cf-line-strong); color:var(--cf-ink); background:transparent; }
+.premium-home-button:hover { background:var(--cf-ink); color:#fff; }
+
+section { padding: clamp(70px,8vw,105px) 8%; }
+section#how { background: var(--cf-cream); }
+.section-title { max-width: 720px; margin-bottom: 54px; }
+.section-title h2 {
+    font-family:'Bodoni Moda',serif;
+    font-size: clamp(36px,4vw,52px);
+    font-weight:400;
+    line-height:1.08;
+    color:var(--cf-ink);
+}
+.section-title p { color:var(--cf-muted); font-size:16px; line-height:1.75; }
+.cards { max-width:1100px; gap:16px; }
+.card {
+    padding: 31px;
+    background: rgba(255,255,255,.72);
+    border: 1px solid var(--cf-line);
+    border-radius: var(--cf-radius);
+    box-shadow: var(--cf-shadow-soft);
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.card:hover { transform:translateY(-4px); box-shadow:var(--cf-shadow); border-color:rgba(15,113,128,.22); }
+.icon { width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; background:#edf6f5; margin-bottom:21px; }
+.card h3 { font-size:19px; margin-bottom:11px; }
+.card p { color:var(--cf-muted); line-height:1.7; font-size:14px; }
+
+.logbook {
+    background:
+        radial-gradient(circle at 85% 20%, rgba(121,199,196,.12), transparent 28%),
+        linear-gradient(135deg,#0c2935,#0b4654);
+    color:white;
+    position:relative;
+    overflow:hidden;
+}
+.logbook::before { content:""; position:absolute; width:500px; height:500px; border:1px solid rgba(155,225,221,.09); border-radius:50%; right:-260px; top:-260px; }
+.logbook-content { max-width:1100px; gap:65px; position:relative; z-index:1; }
+.logbook h2 { font-family:'Bodoni Moda',serif; font-size:clamp(38px,4vw,54px); font-weight:400; line-height:1.04; }
+.logbook p { color:rgba(226,241,241,.72); line-height:1.8; font-size:15px; }
+.stats { gap:12px; }
+.stat { background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.09); padding:23px; border-radius:16px; backdrop-filter:blur(8px); }
+.stat strong { font-size:31px; color:#a1dfdb; }
+.stat span { color:rgba(226,241,241,.66); font-size:12px; }
+.sailing-map-section { margin-top:20px; }
+.premium-map-label,.founder-label,.premium-eyebrow { color:#7fcfcb; letter-spacing:.16em; font-size:10px; font-weight:700; }
+.map-heading-row h3 { font-size:22px; margin-bottom:5px; }
+.map-heading-row p { font-size:13px; }
+.map-lock-badge { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); color:rgba(255,255,255,.7); }
+#sailingMap { border:1px solid rgba(255,255,255,.12); box-shadow:0 16px 40px rgba(0,0,0,.15); }
+.map-preview-overlay { background:rgba(5,27,37,.42); backdrop-filter:blur(4px); }
+.map-preview-card { background:rgba(255,255,255,.94); border:1px solid rgba(255,255,255,.6); box-shadow:0 18px 45px rgba(0,0,0,.2); }
+
+.profile-page { padding:clamp(55px,7vw,85px) 6%; background:var(--cf-cream); }
+.profile-container { max-width:1000px; }
+.profile-heading { margin-bottom:38px; }
+.profile-heading h1 { font-family:'Bodoni Moda',serif; font-size:clamp(38px,5vw,58px); font-weight:400; line-height:1.02; }
+.profile-heading p { color:var(--cf-muted); font-size:15px; line-height:1.65; }
+.form-card,.premium-features-card,.premium-summary-card,.premium-cv-card,.premium-cancel-card {
+    background:rgba(255,255,255,.9);
+    border:1px solid var(--cf-line);
+    border-radius:var(--cf-radius);
+    box-shadow:var(--cf-shadow-soft);
+}
+.form-card { padding:32px; margin-bottom:18px; }
+.form-card h2 { font-size:21px; }
+.form-card > p { color:var(--cf-muted); }
+.form-grid { gap:18px; }
+.form-group { margin-bottom:18px; }
+label { font-size:12px; color:var(--cf-ink-soft); letter-spacing:.015em; }
+input,select,textarea {
+    padding:13px 15px;
+    border:1px solid #d6e0e2;
+    border-radius:11px;
+    font-family:'DM Sans',sans-serif;
+    font-size:14px;
+    color:var(--cf-ink);
+    background:#fff;
+    transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+input:hover,select:hover,textarea:hover { border-color:#b9cccf; }
+input:focus,select:focus,textarea:focus { border-color:var(--cf-ocean); box-shadow:0 0 0 4px rgba(15,113,128,.09); background:#fff; }
+.checkbox { background:#f4f8f7; border:1px solid rgba(16,42,54,.07); border-radius:11px; }
+.contact-box { background:#eef7f6; border:1px solid rgba(15,113,128,.12); }
+.back-button { background:#edf1f1; color:var(--cf-ink); }
+.back-button:hover { background:#dfe8e8; }
+.success-message { background:#edf8f1; border:1px solid #bfe3ce; color:#24603d; }
+.error-message { background:#fff3f2; border:1px solid #edc5c1; color:#8a2e29; }
+
+.search-result,.no-results {
+    background:rgba(255,255,255,.9);
+    border:1px solid var(--cf-line);
+    border-radius:var(--cf-radius);
+    box-shadow:var(--cf-shadow-soft);
+}
+.search-result { padding:27px; margin-bottom:14px; transition:box-shadow .2s ease, transform .2s ease; }
+.search-result:hover { box-shadow:var(--cf-shadow); }
+.search-result h3 { font-size:21px; }
+.search-result .location { color:var(--cf-ocean); font-size:13px; }
+.search-result p { color:var(--cf-muted); font-size:14px; line-height:1.7; }
+.search-result strong { color:var(--cf-ink); }
+.profile-details,.profile-voyages,.contact-result { border-color:var(--cf-line); }
+.voyage-entry { background:#f5f8f7; border:1px solid rgba(16,42,54,.08); border-radius:12px; }
+.voyage-entry strong,.voyage-entry div,.voyage-entry p { color:var(--cf-ink); }
+
+.profile-photo-preview,.profile-photo-placeholder,.search-profile-photo,.profile-details-photo { border-color:#d6e0e2; }
+.profile-photo-placeholder { background:#eef4f3; color:#70848b; }
+.verified-badge { background:#168a91; box-shadow:0 2px 7px rgba(15,113,128,.25); }
+.profile-photo-modal { background:rgba(4,22,30,.86); backdrop-filter:blur(8px); }
+.profile-photo-modal img { box-shadow:0 25px 80px rgba(0,0,0,.4); }
+
+.founder-banner { background:#f6faf9; border:1px solid rgba(15,113,128,.13); border-radius:14px; box-shadow:var(--cf-shadow-soft); }
+.founder-label { color:var(--cf-ocean); }
+.founder-banner span:last-child { color:var(--cf-muted); }
+.premium-lock { background:linear-gradient(135deg,#12323e,#0d4b58); border:1px solid rgba(121,199,196,.16); border-radius:18px; box-shadow:var(--cf-shadow); }
+.premium-lock p { color:rgba(235,246,246,.7); }
+
+.premium-page { max-width:1000px; }
+.premium-page .profile-heading { text-align:center; }
+.premium-eyebrow { color:var(--cf-ocean); }
+.founder-offer-card {
+    background:
+        radial-gradient(circle at 80% 15%,rgba(155,225,221,.18),transparent 25%),
+        linear-gradient(135deg,#0b2935,#0b4c59);
+    border:1px solid rgba(155,225,221,.14);
+    border-radius:22px;
+    padding:42px;
+    box-shadow:0 25px 70px rgba(10,45,56,.18);
+}
+.founder-offer-card h2 { font-family:'Bodoni Moda',serif; font-size:clamp(34px,4vw,48px); font-weight:400; }
+.founder-limit,.founder-remaining span,.small-note { color:rgba(231,245,245,.67); }
+.founder-remaining strong { color:#a1dfdb; }
+.premium-price-ladder > div { background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.1); border-radius:12px; }
+.premium-price-ladder span { color:rgba(231,245,245,.66); }
+.premium-features-card { padding:32px; }
+.premium-feature-grid { gap:12px; }
+.premium-feature-grid > div { background:#f4f8f7; border:1px solid rgba(16,42,54,.06); border-radius:14px; padding:19px; transition:transform .2s ease, background .2s ease; }
+.premium-feature-grid > div:hover { transform:translateY(-2px); background:#eef6f5; }
+.premium-feature-grid span { color:var(--cf-muted); }
+.premium-summary-stat { background:#f3f7f6; border:1px solid rgba(16,42,54,.06); }
+.premium-summary-stat strong { color:var(--cf-ink); }
+.premium-summary-text,.premium-cv-output { background:#f8faf9; border-color:#dbe4e4; }
+.premium-cancel-card { border-color:#ead6d4; }
+.premium-cancel-button { border-color:#dca7a3; border-radius:999px; }
+.premium-free-note { color:var(--cf-muted); }
+
+.gpx-import-panel,.strava-panel { background:#f7faf9; border:1px solid rgba(16,42,54,.09); border-radius:14px; }
+.strava-sync-note { background:#f2f7f6; border:1px solid rgba(15,113,128,.1); border-radius:12px; color:var(--cf-muted); }
+.strava-sync-note strong,.gpx-import-panel h4,.strava-panel h4,.strava-activity-title { color:var(--cf-ink); }
+.strava-activity { border-color:rgba(16,42,54,.09); border-radius:12px; }
+.strava-activity-meta,.strava-status { color:var(--cf-muted); }
+.voyage-source { background:#fff3eb; color:#e24d00; }
+.voyage-mini-map { border-color:#dbe4e4; }
+
+.achievements-summary { gap:12px; }
+.achievement-summary-card { background:#f5f8f7; border:1px solid var(--cf-line); border-radius:16px; box-shadow:var(--cf-shadow-soft); }
+.achievement-summary-card strong { color:var(--cf-ink); }
+.achievement-summary-card span,.achievement-card p { color:var(--cf-muted); }
+.achievements-section-title { color:var(--cf-ink); font-size:22px; margin-top:38px; }
+.achievement-card { background:rgba(255,255,255,.92); border:1px solid var(--cf-line); border-radius:17px; box-shadow:var(--cf-shadow-soft); transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease; }
+.achievement-card:hover { transform:translateY(-3px); box-shadow:var(--cf-shadow); }
+.achievement-card.earned { border-color:rgba(15,113,128,.42); box-shadow:0 8px 28px rgba(15,113,128,.09); }
+.achievement-icon { background:#edf4f3; }
+.achievement-card.earned .achievement-icon { background:#e1f2f0; }
+.achievement-card h3 { color:var(--cf-ink); }
+.achievement-status { color:var(--cf-ocean); }
+.achievement-progress { background:#e6eeee; }
+.achievement-progress-bar { background:var(--cf-ocean); }
+.achievements-lock { background:#f6f9f8; border:1px solid var(--cf-line); border-radius:18px; box-shadow:var(--cf-shadow-soft); }
+.achievements-note { color:var(--cf-muted); }
+
+.terms-modal { background:rgba(7,28,36,.24); backdrop-filter:blur(3px); }
+.terms-card { background:rgba(255,255,255,.98); border:1px solid var(--cf-line); border-radius:20px 20px 0 0; box-shadow:0 -20px 60px rgba(10,36,45,.2); }
+.terms-header h2 { font-size:19px; }
+.terms-header p,.terms-body p,.terms-body li { color:var(--cf-muted); }
+.terms-more-wrap,.terms-actions { background:rgba(255,255,255,.98); border-color:var(--cf-line); }
+.terms-primary { background:var(--cf-ocean); border-radius:999px; }
+.terms-primary:hover { background:#0b6370; }
+.terms-secondary { border-color:#d7e1e1; border-radius:999px; }
+.terms-more-button,.terms-link { color:var(--cf-ocean); }
+
+footer { background:#09242f; color:rgba(224,240,240,.65); padding:30px; }
+
+/* Subtle reveal-like hover treatment without changing layout or behaviour. */
+button:not(:disabled), a { -webkit-tap-highlight-color:transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline:2px solid rgba(15,113,128,.5); outline-offset:3px; }
+
+@media (max-width:800px) {
+    header { padding:14px 20px; }
+    nav { gap:2px; }
+    nav a { padding:8px 9px; font-size:12px; }
+    .hero { min-height:650px; padding:78px 7%; background-position:60% center; }
+    .hero h1 { font-size:clamp(50px,12vw,72px); }
+    .cards { gap:14px; }
+    .card { padding:26px; }
+    .logbook-content { gap:40px; }
+    .premium-features-card,.form-card { padding:25px; }
+}
+
+@media (max-width:600px) {
+    .logo { font-size:21px; }
+    .hero { min-height:620px; }
+    .hero p { font-size:16px; line-height:1.65; }
+    .button { padding:12px 18px; }
+    section { padding:65px 6%; }
+    .profile-page { padding:48px 5%; }
+    .form-card { padding:22px; }
+    .founder-offer-card { padding:30px 21px; }
+    .premium-price-ladder { grid-template-columns:1fr; }
+    .terms-card { border-radius:18px 18px 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior:auto; }
+    *,*::before,*::after { transition-duration:.01ms !important; animation-duration:.01ms !important; }
+}
+
 </style>
 
+
+<style>
+.premium-icon{display:inline-flex;align-items:center;justify-content:center;width:1.25em;height:1.25em;margin-right:.38em;border-radius:50%;font-size:.82em;font-weight:800;color:var(--cf-ocean,#0f7180);background:rgba(121,199,196,.18);vertical-align:-.08em;}
+</style>
 </head>
 
 <body>
@@ -1778,7 +2183,7 @@ footer {
                 <div class="map-preview-wrap">
                     <div id="sailingMap"></div>
                     <div id="mapPreviewOverlay" class="map-preview-overlay">
-                        <div class="map-preview-card"><div class="premium-lock-icon">🗺️</div><h3>Build your sailing map</h3><p>Premium members can add journeys, connect routes and keep their sailing history in one place.</p><button class="button primary" onclick="showPremium()">Unlock Premium</button></div>
+                        <div class="map-preview-card"><div class="premium-lock-icon">⌖️</div><h3>Build your sailing map</h3><p>Premium members can add journeys, connect routes and keep their sailing history in one place.</p><button class="button primary" onclick="showPremium()">Unlock Premium</button></div>
                     </div>
                 </div>
                 <div id="mapEmpty" class="map-empty" style="display:none;">Your sailing map will appear here when you add your first journey.</div>
@@ -1851,7 +2256,7 @@ footer {
         </div>
 
         <div id="achievementsLocked" class="achievements-lock">
-            <div class="premium-lock-icon">🏆</div>
+            <div class="premium-lock-icon">◆</div>
             <h3>Achievements are a Premium feature.</h3>
             <p>Your achievements are calculated automatically from your logged voyages, miles, routes, boats and sailing locations.</p>
             <button class="button primary" onclick="showPremium()">Unlock Premium</button>
@@ -1925,12 +2330,12 @@ footer {
         <div class="premium-features-card">
             <h2>What's included</h2>
             <div class="premium-feature-grid">
-                <div><strong>⭐ Strava GPX map import</strong><span>Export your Strava activity as a GPX file and upload the recorded route to CrewFinder.</span></div>
-                <div><strong>✓ Unlimited sailing logbook</strong><span>Record and manage your voyages.</span></div>
-                <div><strong>🗺 Personal sailing map</strong><span>See where your sailing has taken you, including routes imported from Strava GPX files.</span></div>
-                <div><strong>📊 Sailing statistics</strong><span>Track miles, voyages, locations and more.</span></div>
-                <div><strong>🏆 Sailing milestones</strong><span>Unlock milestones as your experience grows.</span></div>
-                <div><strong>✓ CrewFinder Verified</strong><span>Show that your profile is verified.</span></div>
+                <div><strong>✦ Strava GPX map import</strong><span>Export your Strava activity as a GPX file and upload the recorded route to CrewFinder.</span></div>
+                <div><strong><span class="premium-icon">✓</span> Unlimited sailing logbook</strong><span>Record and manage your voyages.</span></div>
+                <div><strong><span class="premium-icon">⌖</span> Personal sailing map</strong><span>See where your sailing has taken you, including routes imported from Strava GPX files.</span></div>
+                <div><strong><span class="premium-icon">▥</span> Sailing statistics</strong><span>Track miles, voyages, locations and more.</span></div>
+                <div><strong><span class="premium-icon">◆</span> Sailing milestones</strong><span>Unlock milestones as your experience grows.</span></div>
+                <div><strong><span class="premium-icon">✓</span> CrewFinder Verified</strong><span>Show that your profile is verified.</span></div>
             </div>
         </div>
 
@@ -3170,7 +3575,7 @@ async function loadAchievements() {
                     target: 25
                 },
                 {
-                    icon: "🏆",
+                    icon: "◆",
                     title: "Voyage Builder",
                     description: "Log 50 sailing journeys.",
                     target: 50
@@ -3196,7 +3601,7 @@ async function loadAchievements() {
                     target: 50
                 },
                 {
-                    icon: "🗺️",
+                    icon: "⌖️",
                     title: "100 Nautical Miles",
                     description: "Reach 100 nautical miles.",
                     target: 100
@@ -3214,7 +3619,7 @@ async function loadAchievements() {
                     target: 500
                 },
                 {
-                    icon: "🏆",
+                    icon: "◆",
                     title: "1,000 Nautical Miles",
                     description: "Reach 1,000 nautical miles.",
                     target: 1000
@@ -3240,7 +3645,7 @@ async function loadAchievements() {
                     target: 3
                 },
                 {
-                    icon: "🗺️",
+                    icon: "⌖️",
                     title: "Route Builder",
                     description: "Add 5 mapped journeys with a start and end location.",
                     target: 5
