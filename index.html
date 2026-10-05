@@ -838,9 +838,17 @@ textarea:focus {
 
 .voyage-entry {
     background: #f5f8fa;
+    color: #10212b;
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 10px;
+    border: 1px solid #dfe7ec;
+}
+
+.voyage-entry strong,
+.voyage-entry div,
+.voyage-entry p {
+    color: #10212b;
 }
 
 .your-voyages {
@@ -1102,6 +1110,133 @@ textarea:focus {
     background: #f3f5f6;
     color: #52616b;
     border: 1px solid #dfe7ec;
+}
+
+.strava-sync-note {
+    margin: 8px 0 18px;
+    padding: 12px 14px;
+    border: 1px solid #dce7ec;
+    border-radius: 10px;
+    background: #f8fbfc;
+    color: #52616b;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.strava-sync-note strong {
+    color: #173042;
+}
+
+.strava-sync-note button {
+    margin-left: 6px;
+}
+
+.strava-panel {
+    margin-top: 18px;
+    padding: 18px;
+    border: 1px solid #dfe7ec;
+    border-radius: 12px;
+    background: #fbfdfe;
+}
+
+.strava-panel h4 {
+    margin-bottom: 6px;
+    color: #173042;
+}
+
+.strava-panel p {
+    color: #607681;
+    margin-bottom: 14px;
+}
+
+.strava-status {
+    margin-top: 10px;
+    color: #52616b;
+    font-size: 13px;
+}
+
+.strava-activity-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.strava-activity {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: white;
+    border: 1px solid #dfe7ec;
+    border-radius: 10px;
+}
+
+.strava-activity input {
+    width: 18px;
+    height: 18px;
+    margin-top: 3px;
+    flex: 0 0 auto;
+}
+
+.strava-activity-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.strava-activity-title {
+    font-weight: 700;
+    color: #173042;
+}
+
+.strava-activity-meta {
+    margin-top: 4px;
+    color: #607681;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.strava-imported {
+    color: #1687c9;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.voyage-source {
+    display: inline-block;
+    margin: 7px 0 10px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #fff1e8;
+    color: #fc4c02;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.voyage-mini-map {
+    width: 100%;
+    height: 180px;
+    margin-top: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #dfe7ec;
+    background: #eaf0f3;
+}
+
+.voyage-mini-map-empty {
+    padding: 16px;
+    margin-top: 12px;
+    border-radius: 10px;
+    background: #eef3f5;
+    color: #607681;
+    text-align: center;
+    font-size: 13px;
+}
+
+@media (max-width: 700px) {
+    .strava-sync-note button {
+        display: block;
+        margin: 10px 0 0;
+    }
 }
 
 @media (max-width: 600px) {
@@ -1486,7 +1621,7 @@ footer {
 </div>
 
 <div class="premium-home-promo">
-    <strong>CrewFinder Premium</strong> — build a detailed history of your time on the water with an unlimited sailing logbook, personal sailing map, sailing statistics, milestones, a digital sailing CV, CrewFinder Verified and a yearly sailing summary.
+    <strong>CrewFinder Premium</strong> — import selected Strava activities straight into your CrewFinder logbook and map, plus an unlimited sailing logbook, personal sailing map, sailing statistics, milestones, a digital sailing CV, CrewFinder Verified and a yearly sailing summary.
     <button class="button secondary premium-home-button" onclick="showPremium()">Explore Premium</button>
 </div>
 
@@ -1630,6 +1765,10 @@ footer {
 
             <div class="voyage-form">
                 <h3>Add a journey</h3>
+                <div class="strava-sync-note">
+                    Already logged it on Strava? <strong>Sync the Strava activity instead of entering it twice.</strong>
+                    <button type="button" class="button" onclick="openStravaImporter()">Import from Strava</button>
+                </div>
                 <input type="date" id="voyageDate">
                 <input type="text" id="voyageBoat" placeholder="Boat / fleet">
 
@@ -1646,6 +1785,16 @@ footer {
                 <button class="button primary" onclick="addVoyage()">
                     Add Journey
                 </button>
+            </div>
+
+            <div id="stravaPanel" class="strava-panel" style="display:none;">
+                <h4>Import selected Strava activities</h4>
+                <p>Only activities you select will be added to your CrewFinder logbook. Cycling, running, gym and other unrelated activities are not shown.</p>
+                <button type="button" class="button" onclick="connectStrava()">Connect Strava</button>
+                <button type="button" class="button" onclick="loadStravaActivities()">Refresh activities</button>
+                <div id="stravaStatus" class="strava-status"></div>
+                <div id="stravaActivityList" class="strava-activity-list"></div>
+                <button type="button" id="importStravaButton" class="button primary" style="display:none;margin-top:14px;" onclick="importSelectedStravaActivities()">Import selected activities</button>
             </div>
 
             <div id="yourVoyages" class="your-voyages">
@@ -1748,8 +1897,9 @@ footer {
         <div class="premium-features-card">
             <h2>What's included</h2>
             <div class="premium-feature-grid">
+                <div><strong>⭐ Strava activity sync</strong><span>Select your sailing and watersports activities from Strava and import their route and data into CrewFinder.</span></div>
                 <div><strong>✓ Unlimited sailing logbook</strong><span>Record and manage your voyages.</span></div>
-                <div><strong>🗺 Personal sailing map</strong><span>See where your sailing has taken you.</span></div>
+                <div><strong>🗺 Personal sailing map</strong><span>See where your sailing has taken you, including imported Strava routes.</span></div>
                 <div><strong>📊 Sailing statistics</strong><span>Track miles, voyages, locations and more.</span></div>
                 <div><strong>🏆 Sailing milestones</strong><span>Unlock milestones as your experience grows.</span></div>
                 <div><strong>✓ CrewFinder Verified</strong><span>Show that your profile is verified.</span></div>
@@ -3214,8 +3364,7 @@ async function loadSailingMap() {
     if (!document.getElementById("sailingMap")) return;
 
     initialiseSailingMap();
-    if (!accessToken || !userId) return;
-    if (!sailingMap || !sailingMapLayer) return;
+    if (!accessToken || !userId || !sailingMap || !sailingMapLayer) return;
 
     sailingMapLayer.clearLayers();
 
@@ -3224,7 +3373,7 @@ async function loadSailingMap() {
             SUPABASE_URL +
             "/rest/v1/voyages?user_id=eq." +
             userId +
-            "&select=date,boat,location,start_location,end_location,waypoints,miles&order=date.asc",
+            "&select=*&order=date.asc,created_at.asc",
             {
                 method: "GET",
                 headers: {
@@ -3234,49 +3383,125 @@ async function loadSailingMap() {
             }
         );
 
-        if (!response.ok) return;
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Could not load sailing map data:", errorText);
+            if (mapEmpty) {
+                mapEmpty.style.display = "block";
+                mapEmpty.textContent = "Could not load your sailing journeys right now.";
+            }
+            return;
+        }
+
         const voyages = await response.json();
 
-        if (mapEmpty) mapEmpty.style.display = voyages.length ? "none" : "block";
+        if (mapEmpty) {
+            mapEmpty.style.display = voyages.length ? "none" : "block";
+            mapEmpty.textContent = "Your sailing map will appear here when you add your first journey.";
+        }
+
         if (!voyages.length) return;
 
         const points = [];
+        const geocodeCache = new Map();
+
+        async function getCachedGeocode(location) {
+            const key = String(location || "").trim().toLowerCase();
+            if (!key) return null;
+            if (geocodeCache.has(key)) return geocodeCache.get(key);
+
+            const point = await geocodeLocation(location);
+            geocodeCache.set(key, point);
+            await new Promise(function(resolve) { setTimeout(resolve, 1100); });
+            return point;
+        }
 
         for (const voyage of voyages) {
-            if (!voyage.start_location || !voyage.end_location) continue;
+            const storedRoute = parseRoutePoints(voyage.route_points);
+
+            if (storedRoute.length >= 2) {
+                const routePoints = storedRoute.map(function (point) {
+                    return [point.lat, point.lng];
+                });
+
+                routePoints.forEach(function (point) {
+                    points.push(point);
+                });
+
+                const line = L.polyline(routePoints, {
+                    weight: 4,
+                    opacity: 0.85
+                }).addTo(sailingMapLayer);
+
+                const sourceLabel = voyage.source === "strava" ? "<br><strong>↗ Imported from Strava</strong>" : "";
+                line.bindPopup(
+                    "<strong>" + escapeHtml(voyage.date || "Journey") + "</strong>" +
+                    sourceLabel +
+                    (voyage.boat ? "<br>⛵ " + escapeHtml(voyage.boat) : "") +
+                    (voyage.miles !== null && voyage.miles !== undefined ? "<br>🌊 " + escapeHtml(String(voyage.miles)) + " NM" : "")
+                );
+
+                L.circleMarker(routePoints[0], { radius: 6 }).addTo(sailingMapLayer)
+                    .bindPopup("<strong>Start</strong>");
+                L.circleMarker(routePoints[routePoints.length - 1], { radius: 6 }).addTo(sailingMapLayer)
+                    .bindPopup("<strong>End</strong>");
+
+                continue;
+            }
+
+            if (!voyage.start_location || !voyage.end_location) {
+                console.warn("Skipping voyage without route data:", voyage);
+                continue;
+            }
+
+            let waypoints = voyage.waypoints || [];
+            if (typeof waypoints === "string") {
+                try {
+                    waypoints = JSON.parse(waypoints);
+                } catch (error) {
+                    waypoints = [];
+                }
+            }
+            if (!Array.isArray(waypoints)) waypoints = [];
 
             const routeLocations = [
                 voyage.start_location,
-                ...(Array.isArray(voyage.waypoints) ? voyage.waypoints : []),
+                ...waypoints,
                 voyage.end_location
-            ].filter(Boolean);
+            ].filter(function(location) {
+                return typeof location === "string" && location.trim();
+            });
 
             const routePoints = [];
             const geocodedLocations = [];
 
             for (const routeLocation of routeLocations) {
-                const point = await geocodeLocation(routeLocation);
+                const point = await getCachedGeocode(routeLocation);
                 if (point) {
                     routePoints.push([point.lat, point.lng]);
                     points.push([point.lat, point.lng]);
                     geocodedLocations.push({ location: routeLocation, point: point });
+                } else {
+                    console.warn("Could not geocode journey location:", routeLocation);
                 }
-                await new Promise(function(resolve) { setTimeout(resolve, 1100); });
             }
 
-            if (routePoints.length < 2) continue;
+            if (!routePoints.length) continue;
 
-            const line = L.polyline(
-                routePoints,
-                { weight: 4, opacity: 0.8 }
-            ).addTo(sailingMapLayer);
+            if (routePoints.length >= 2) {
+                const line = L.polyline(routePoints, {
+                    weight: 4,
+                    opacity: 0.8
+                }).addTo(sailingMapLayer);
 
-            line.bindPopup(
-                "<strong>" + escapeHtml(voyage.date || "Journey") + "</strong><br>" +
-                escapeHtml(voyage.start_location) + " → " + escapeHtml(voyage.end_location) +
-                (voyage.boat ? "<br>⛵ " + escapeHtml(voyage.boat) : "") +
-                (voyage.miles !== null && voyage.miles !== undefined ? "<br>🌊 " + escapeHtml(String(voyage.miles)) + " NM" : "")
-            );
+                line.bindPopup(
+                    "<strong>" + escapeHtml(voyage.date || "Journey") + "</strong><br>" +
+                    escapeHtml(voyage.start_location) + " → " + escapeHtml(voyage.end_location) +
+                    (waypoints.length ? "<br>📍 " + waypoints.length + " waypoint" + (waypoints.length === 1 ? "" : "s") : "") +
+                    (voyage.boat ? "<br>⛵ " + escapeHtml(voyage.boat) : "") +
+                    (voyage.miles !== null && voyage.miles !== undefined ? "<br>🌊 " + escapeHtml(String(voyage.miles)) + " NM" : "")
+                );
+            }
 
             const firstPoint = geocodedLocations[0];
             const lastPoint = geocodedLocations[geocodedLocations.length - 1];
@@ -3288,26 +3513,37 @@ async function loadSailingMap() {
             }
 
             geocodedLocations.slice(1, -1).forEach(function(item) {
-                L.circleMarker([item.point.lat, item.point.lng], { radius: 5 })
+                L.circleMarker([item.point.lat, item.point.lng], { radius: 6 })
                     .addTo(sailingMapLayer)
                     .bindPopup("<strong>Waypoint</strong><br>" + escapeHtml(item.location));
             });
 
-            if (lastPoint) {
+            if (lastPoint && geocodedLocations.length > 1) {
                 L.marker([lastPoint.point.lat, lastPoint.point.lng])
                     .addTo(sailingMapLayer)
                     .bindPopup("<strong>End</strong><br>" + escapeHtml(lastPoint.location));
             }
         }
 
-        if (points.length) {
+        if (points.length === 1) {
+            sailingMap.setView(points[0], 10);
+        } else if (points.length > 1) {
             sailingMap.fitBounds(points, { padding: [30, 30] });
         }
 
+        setTimeout(function() {
+            sailingMap.invalidateSize();
+        }, 100);
+
     } catch (error) {
         console.error("Could not load sailing map:", error);
+        if (mapEmpty) {
+            mapEmpty.style.display = "block";
+            mapEmpty.textContent = "Could not load your sailing journeys right now.";
+        }
     }
 }
+
 
 async function updatePremiumUI() {
     const premium = await getPremiumStatus();
@@ -3358,8 +3594,41 @@ async function loadFounderOffer() {
     }
 }
 
-function startSubscription() {
-    alert("Subscription checkout is the next step. The Premium page is ready; we now need to connect a real payment provider so successful payments can unlock Premium securely.");
+async function startSubscription() {
+    const accessToken = localStorage.getItem("crewfinder_access_token");
+
+    if (!accessToken) {
+        alert("Please log in before joining CrewFinder Premium.");
+        showLogin();
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            SUPABASE_URL + "/functions/v1/create-checkout",
+            {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + accessToken,
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.url) {
+            throw new Error(
+                data.error || "Could not start Premium checkout."
+            );
+        }
+
+        window.location.href = data.url;
+
+    } catch (error) {
+        console.error("Stripe checkout error:", error);
+        alert(error.message || "Could not start Premium checkout.");
+    }
 }
 
 
@@ -4071,7 +4340,8 @@ function addWaypoint() {
                     end_location: endLocation,
                     waypoints: waypoints,
                     miles: miles ? Number(miles) : null,
-                    notes: notes
+                    notes: notes,
+                    source: "manual"
                 })
             }
         );
@@ -4322,16 +4592,14 @@ function toggleProfileDetails(button) {
     const userId = localStorage.getItem("crewfinder_user_id");
     const voyageList = document.getElementById("voyageList");
 
-    if (!accessToken || !userId || !voyageList) {
-        return;
-    }
+    if (!accessToken || !userId || !voyageList) return;
 
     try {
         const response = await fetch(
             SUPABASE_URL +
             "/rest/v1/voyages?user_id=eq." +
             userId +
-            "&select=*&order=date.desc",
+            "&select=*&order=date.desc,created_at.desc",
             {
                 method: "GET",
                 headers: {
@@ -4342,7 +4610,9 @@ function toggleProfileDetails(button) {
         );
 
         if (!response.ok) {
-            voyageList.innerHTML = "<p>Could not load your voyages.</p>";
+            const errorText = await response.text();
+            console.error("Could not load voyages:", errorText);
+            voyageList.innerHTML = "<p>Could not load your voyages right now.</p>";
             return;
         }
 
@@ -4353,17 +4623,36 @@ function toggleProfileDetails(button) {
             return;
         }
 
-        voyageList.innerHTML = voyages.map(function (voyage) {
+        voyageList.innerHTML = voyages.map(function (voyage, index) {
+            const source = voyage.source || "manual";
+            const routePoints = parseRoutePoints(voyage.route_points);
+            const miniMapId = "voyageMiniMap_" + index;
+
             return `
                 <div class="voyage-entry">
                     <strong>${escapeHtml(voyage.date || "")}</strong>
+                    ${source === "strava" ? '<div class="voyage-source">↗ Imported from Strava</div>' : ""}
                     ${voyage.boat ? `<div>⛵ ${escapeHtml(voyage.boat)}</div>` : ""}
+                    ${voyage.strava_activity_name ? `<div>🏄 ${escapeHtml(voyage.strava_activity_name)}</div>` : ""}
+                    ${voyage.strava_sport_type ? `<div>🏷 ${escapeHtml(voyage.strava_sport_type)}</div>` : ""}
                     ${voyage.location ? `<div>📍 ${escapeHtml(voyage.location)}</div>` : ""}
-                    ${voyage.miles !== null && voyage.miles !== undefined ? `<div>🌊 ${escapeHtml(String(voyage.miles))} nautical miles</div>` : ""}
+                    ${voyage.start_location && voyage.end_location ? `<div>🧭 ${escapeHtml(voyage.start_location)} → ${escapeHtml(voyage.end_location)}</div>` : ""}
+                    ${voyage.miles !== null && voyage.miles !== undefined ? `<div>🌊 ${escapeHtml(String(Number(voyage.miles).toFixed(1)))} nautical miles</div>` : ""}
+                    ${voyage.strava_elapsed_time ? `<div>⏱ ${escapeHtml(formatDuration(voyage.strava_elapsed_time))}</div>` : ""}
+                    ${voyage.strava_elevation_gain !== null && voyage.strava_elevation_gain !== undefined ? `<div>↗ ${escapeHtml(String(Math.round(Number(voyage.strava_elevation_gain))))} m elevation</div>` : ""}
                     ${voyage.notes ? `<div>${escapeHtml(voyage.notes)}</div>` : ""}
+                    ${voyage.strava_activity_url ? `<div style="margin-top:8px;"><a href="${escapeHtml(voyage.strava_activity_url)}" target="_blank" rel="noopener noreferrer" style="color:#fc4c02;text-decoration:none;font-weight:700;">View on Strava ↗</a></div>` : ""}
+                    ${routePoints.length >= 2 ? `<div id="${miniMapId}" class="voyage-mini-map"></div>` : (source === "strava" ? '<div class="voyage-mini-map-empty">No GPS route was available for this Strava activity.</div>' : "")}
                 </div>
             `;
         }).join("");
+
+        voyages.forEach(function (voyage, index) {
+            const routePoints = parseRoutePoints(voyage.route_points);
+            if (routePoints.length >= 2) {
+                initialiseVoyageMiniMap("voyageMiniMap_" + index, routePoints);
+            }
+        });
 
     } catch (error) {
         console.error(error);
@@ -4371,6 +4660,263 @@ function toggleProfileDetails(button) {
     }
 }
 
+function formatDuration(seconds) {
+    const total = Number(seconds);
+    if (!Number.isFinite(total) || total <= 0) return "";
+
+    const hours = Math.floor(total / 3600);
+    const minutes = Math.floor((total % 3600) / 60);
+
+    if (hours) return hours + "h " + minutes + "m";
+    return minutes + " min";
+}
+
+function parseRoutePoints(value) {
+    if (!value) return [];
+
+    let parsed = value;
+    if (typeof parsed === "string") {
+        try {
+            parsed = JSON.parse(parsed);
+        } catch (error) {
+            return [];
+        }
+    }
+
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.map(function (point) {
+        if (Array.isArray(point) && point.length >= 2) {
+            return { lat: Number(point[0]), lng: Number(point[1]) };
+        }
+
+        if (point && point.lat !== undefined && point.lng !== undefined) {
+            return { lat: Number(point.lat), lng: Number(point.lng) };
+        }
+
+        return null;
+    }).filter(function (point) {
+        return point && Number.isFinite(point.lat) && Number.isFinite(point.lng);
+    });
+}
+
+function initialiseVoyageMiniMap(elementId, routePoints) {
+    const element = document.getElementById(elementId);
+    if (!element || typeof L === "undefined" || routePoints.length < 2) return;
+
+    const map = L.map(element, {
+        zoomControl: false,
+        attributionControl: true,
+        scrollWheelZoom: false
+    });
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 18,
+        attribution: "© OpenStreetMap contributors"
+    }).addTo(map);
+
+    const latLngs = routePoints.map(function (point) {
+        return [point.lat, point.lng];
+    });
+
+    L.polyline(latLngs, {
+        weight: 4,
+        opacity: 0.85
+    }).addTo(map);
+
+    L.circleMarker(latLngs[0], { radius: 5 }).addTo(map);
+    L.circleMarker(latLngs[latLngs.length - 1], { radius: 5 }).addTo(map);
+
+    map.fitBounds(latLngs, { padding: [20, 20] });
+
+    setTimeout(function () {
+        map.invalidateSize();
+    }, 50);
+}
+
+
+
+
+/* ==================================================
+   STRAVA IMPORT
+   ================================================== */
+
+function openStravaImporter() {
+    const panel = document.getElementById("stravaPanel");
+    if (!panel) return;
+
+    panel.style.display = "block";
+    panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    loadStravaActivities();
+}
+
+async function connectStrava() {
+    const accessToken = localStorage.getItem("crewfinder_access_token");
+
+    if (!accessToken) {
+        alert("Please log in before connecting Strava.");
+        showLogin();
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            SUPABASE_URL + "/functions/v1/strava-oauth",
+            {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + accessToken,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ action: "authorize" })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.url) {
+            throw new Error(data.error || "Could not connect Strava.");
+        }
+
+        window.location.href = data.url;
+    } catch (error) {
+        console.error("Strava connection error:", error);
+        alert(error.message || "Could not connect Strava.");
+    }
+}
+
+async function loadStravaActivities() {
+    const accessToken = localStorage.getItem("crewfinder_access_token");
+    const status = document.getElementById("stravaStatus");
+    const list = document.getElementById("stravaActivityList");
+    const importButton = document.getElementById("importStravaButton");
+
+    if (!accessToken) {
+        if (status) status.textContent = "Please log in to connect Strava.";
+        return;
+    }
+
+    if (status) status.textContent = "Loading your relevant Strava activities...";
+    if (list) list.innerHTML = "";
+    if (importButton) importButton.style.display = "none";
+
+    try {
+        const response = await fetch(
+            SUPABASE_URL + "/functions/v1/strava-activities",
+            {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + accessToken,
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                if (status) status.textContent = "Strava is not connected yet.";
+                return;
+            }
+            throw new Error(data.error || "Could not load Strava activities.");
+        }
+
+        const activities = Array.isArray(data.activities) ? data.activities : [];
+
+        if (!activities.length) {
+            if (status) status.textContent = "No eligible Strava activities found. Try connecting Strava or recording a sailing/watersports activity first.";
+            return;
+        }
+
+        if (status) {
+            status.textContent = "Select the activities you want to add. Nothing is imported until you press the import button.";
+        }
+
+        list.innerHTML = activities.map(function (activity) {
+            const imported = Boolean(activity.imported);
+            const distanceNm = activity.distance ? (Number(activity.distance) / 1852).toFixed(1) : null;
+            const dateText = activity.start_date_local ? new Date(activity.start_date_local).toLocaleDateString() : "";
+            const typeText = activity.sport_type || activity.type || "Activity";
+
+            return `
+                <label class="strava-activity">
+                    <input type="checkbox" value="${escapeHtml(String(activity.id))}" ${imported ? "disabled" : ""}>
+                    <span class="strava-activity-main">
+                        <span class="strava-activity-title">${escapeHtml(activity.name || typeText)}</span>
+                        <span class="strava-activity-meta">
+                            ${escapeHtml(typeText)}${dateText ? " · " + escapeHtml(dateText) : ""}${distanceNm ? " · " + escapeHtml(distanceNm) + " NM" : ""}
+                        </span>
+                        ${imported ? '<span class="strava-imported">Already imported</span>' : ""}
+                    </span>
+                </label>
+            `;
+        }).join("");
+
+        if (importButton) importButton.style.display = "inline-block";
+
+    } catch (error) {
+        console.error("Strava activities error:", error);
+        if (status) status.textContent = error.message || "Could not load Strava activities.";
+    }
+}
+
+async function importSelectedStravaActivities() {
+    const accessToken = localStorage.getItem("crewfinder_access_token");
+    const status = document.getElementById("stravaStatus");
+    const selected = Array.from(document.querySelectorAll("#stravaActivityList input[type='checkbox']:checked"))
+        .map(function (input) { return Number(input.value); })
+        .filter(Number.isFinite);
+
+    if (!accessToken) {
+        alert("Please log in before importing Strava activities.");
+        return;
+    }
+
+    if (!selected.length) {
+        alert("Please select at least one Strava activity to import.");
+        return;
+    }
+
+    if (status) status.textContent = "Importing selected Strava activities...";
+
+    try {
+        const response = await fetch(
+            SUPABASE_URL + "/functions/v1/strava-import",
+            {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + accessToken,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ activity_ids: selected })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Could not import Strava activities.");
+        }
+
+        const importedCount = Number(data.imported_count || 0);
+        const skippedCount = Number(data.skipped_count || 0);
+
+        if (status) {
+            status.textContent = importedCount + " activity" + (importedCount === 1 ? "" : "ies") + " imported" +
+                (skippedCount ? " · " + skippedCount + " skipped" : "") + ".";
+        }
+
+        await updateLogbookStats();
+        await loadYourVoyages();
+        await loadSailingMap();
+        await loadStravaActivities();
+
+    } catch (error) {
+        console.error("Strava import error:", error);
+        if (status) status.textContent = error.message || "Could not import Strava activities.";
+    }
+}
 
 /* ==================================================
    SECURITY
@@ -4433,6 +4979,18 @@ if (photoInput) {
 
 if (!checkPasswordReset()) {
         loadSailingClubs();
+        const stravaResult = new URLSearchParams(window.location.search).get("strava");
+        if (stravaResult === "connected") {
+            setTimeout(function () {
+                alert("Strava connected successfully. Open your Premium logbook to choose which activities to import.");
+                openLogbook();
+            }, 250);
+        } else if (stravaResult === "error") {
+            const reason = new URLSearchParams(window.location.search).get("message");
+            setTimeout(function () {
+                alert("Could not connect Strava" + (reason ? ": " + reason : "."));
+            }, 250);
+        }
 document.getElementById("verificationCheckbox").addEventListener("change", async function () {
     const checkbox = this;
     const premium = await getPremiumStatus();
