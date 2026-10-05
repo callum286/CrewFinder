@@ -1649,7 +1649,7 @@ footer {
 </div>
 
 <div class="premium-home-promo">
-    <strong>CrewFinder Premium</strong> — import selected Strava activities straight into your CrewFinder logbook and map, plus an unlimited sailing logbook, personal sailing map, sailing statistics, milestones, a digital sailing CV, CrewFinder Verified and a yearly sailing summary.
+    <strong>CrewFinder Premium</strong> — import Strava GPX routes into your CrewFinder logbook and map, plus an unlimited sailing logbook, personal sailing map, sailing statistics, milestones, a digital sailing CV, CrewFinder Verified and a yearly sailing summary.
     <button class="button secondary premium-home-button" onclick="showPremium()">Explore Premium</button>
 </div>
 
@@ -1794,8 +1794,7 @@ footer {
             <div class="voyage-form">
                 <h3>Add a journey</h3>
                 <div class="strava-sync-note">
-                    Already logged it on Strava? <strong>Sync the Strava activity instead of entering it twice.</strong>
-                    <button type="button" class="button" onclick="openStravaImporter()">Import from Strava</button>
+                    Already recorded it on Strava? <strong>Export the activity as a GPX file and upload the route here instead of entering it twice.</strong>
                 </div>
                 <input type="date" id="voyageDate">
                 <input type="text" id="voyageBoat" placeholder="Boat / fleet">
@@ -1821,16 +1820,6 @@ footer {
                 <input type="file" id="gpxFileInput" accept=".gpx,application/gpx+xml,application/xml,text/xml">
                 <button type="button" class="button primary" onclick="importGpxFile()">Import GPX activity</button>
                 <div id="gpxImportStatus" class="strava-status" aria-live="polite"></div>
-            </div>
-
-            <div id="stravaPanel" class="strava-panel" style="display:none;">
-                <h4>Import selected Strava activities</h4>
-                <p>Only activities you select will be added to your CrewFinder logbook. Cycling, running, gym and other unrelated activities are not shown.</p>
-                <button type="button" class="button" onclick="connectStrava()">Connect Strava</button>
-                <button type="button" class="button" onclick="loadStravaActivities()">Refresh activities</button>
-                <div id="stravaStatus" class="strava-status"></div>
-                <div id="stravaActivityList" class="strava-activity-list"></div>
-                <button type="button" id="importStravaButton" class="button primary" style="display:none;margin-top:14px;" onclick="importSelectedStravaActivities()">Import selected activities</button>
             </div>
 
             <div id="yourVoyages" class="your-voyages">
@@ -1933,9 +1922,9 @@ footer {
         <div class="premium-features-card">
             <h2>What's included</h2>
             <div class="premium-feature-grid">
-                <div><strong>⭐ Strava activity sync</strong><span>Select your sailing and watersports activities from Strava and import their route and data into CrewFinder.</span></div>
+                <div><strong>⭐ Strava GPX map import</strong><span>Export your Strava activity as a GPX file and upload the recorded route to CrewFinder.</span></div>
                 <div><strong>✓ Unlimited sailing logbook</strong><span>Record and manage your voyages.</span></div>
-                <div><strong>🗺 Personal sailing map</strong><span>See where your sailing has taken you, including imported Strava routes.</span></div>
+                <div><strong>🗺 Personal sailing map</strong><span>See where your sailing has taken you, including routes imported from Strava GPX files.</span></div>
                 <div><strong>📊 Sailing statistics</strong><span>Track miles, voyages, locations and more.</span></div>
                 <div><strong>🏆 Sailing milestones</strong><span>Unlock milestones as your experience grows.</span></div>
                 <div><strong>✓ CrewFinder Verified</strong><span>Show that your profile is verified.</span></div>
@@ -3469,7 +3458,7 @@ async function loadSailingMap() {
                     opacity: 0.85
                 }).addTo(sailingMapLayer);
 
-                const sourceLabel = voyage.source === "strava" ? "<br><strong>↗ Imported from Strava</strong>" : "";
+                const sourceLabel = voyage.source === "gpx" ? "<br><strong>↗ Imported from Strava GPX</strong>" : "";
                 line.bindPopup(
                     "<strong>" + escapeHtml(voyage.date || "Journey") + "</strong>" +
                     sourceLabel +
@@ -4958,187 +4947,6 @@ async function importGpxFile() {
 
 
 /* ==================================================
-   STRAVA IMPORT
-   ================================================== */
-
-function openStravaImporter() {
-    const panel = document.getElementById("stravaPanel");
-    if (!panel) return;
-
-    panel.style.display = "block";
-    panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    loadStravaActivities();
-}
-
-async function connectStrava() {
-    const accessToken = localStorage.getItem("crewfinder_access_token");
-
-    if (!accessToken) {
-        alert("Please log in before connecting Strava.");
-        showLogin();
-        return;
-    }
-
-    try {
-        const response = await fetch(
-            SUPABASE_URL + "/functions/v1/strava-oauth",
-            {
-                method: "POST",
-                headers: {
-                    "Authorization": "Bearer " + accessToken,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ action: "authorize" })
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok || !data.url) {
-            throw new Error(data.error || "Could not connect Strava.");
-        }
-
-        window.location.href = data.url;
-    } catch (error) {
-        console.error("Strava connection error:", error);
-        alert(error.message || "Could not connect Strava.");
-    }
-}
-
-async function loadStravaActivities() {
-    const accessToken = localStorage.getItem("crewfinder_access_token");
-    const status = document.getElementById("stravaStatus");
-    const list = document.getElementById("stravaActivityList");
-    const importButton = document.getElementById("importStravaButton");
-
-    if (!accessToken) {
-        if (status) status.textContent = "Please log in to connect Strava.";
-        return;
-    }
-
-    if (status) status.textContent = "Loading your relevant Strava activities...";
-    if (list) list.innerHTML = "";
-    if (importButton) importButton.style.display = "none";
-
-    try {
-        const response = await fetch(
-            SUPABASE_URL + "/functions/v1/strava-activities",
-            {
-                method: "POST",
-                headers: {
-                    "Authorization": "Bearer " + accessToken,
-                    "Content-Type": "application/json"
-                }
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            if (response.status === 404) {
-                if (status) status.textContent = "Strava is not connected yet.";
-                return;
-            }
-            throw new Error(data.error || "Could not load Strava activities.");
-        }
-
-        const activities = Array.isArray(data.activities) ? data.activities : [];
-
-        if (!activities.length) {
-            if (status) status.textContent = "No eligible Strava activities found. Try connecting Strava or recording a sailing/watersports activity first.";
-            return;
-        }
-
-        if (status) {
-            status.textContent = "Select the activities you want to add. Nothing is imported until you press the import button.";
-        }
-
-        list.innerHTML = activities.map(function (activity) {
-            const imported = Boolean(activity.imported);
-            const distanceNm = activity.distance ? (Number(activity.distance) / 1852).toFixed(1) : null;
-            const dateText = activity.start_date_local ? new Date(activity.start_date_local).toLocaleDateString() : "";
-            const typeText = activity.sport_type || activity.type || "Activity";
-
-            return `
-                <label class="strava-activity">
-                    <input type="checkbox" value="${escapeHtml(String(activity.id))}" ${imported ? "disabled" : ""}>
-                    <span class="strava-activity-main">
-                        <span class="strava-activity-title">${escapeHtml(activity.name || typeText)}</span>
-                        <span class="strava-activity-meta">
-                            ${escapeHtml(typeText)}${dateText ? " · " + escapeHtml(dateText) : ""}${distanceNm ? " · " + escapeHtml(distanceNm) + " NM" : ""}
-                        </span>
-                        ${imported ? '<span class="strava-imported">Already imported</span>' : ""}
-                    </span>
-                </label>
-            `;
-        }).join("");
-
-        if (importButton) importButton.style.display = "inline-block";
-
-    } catch (error) {
-        console.error("Strava activities error:", error);
-        if (status) status.textContent = error.message || "Could not load Strava activities.";
-    }
-}
-
-async function importSelectedStravaActivities() {
-    const accessToken = localStorage.getItem("crewfinder_access_token");
-    const status = document.getElementById("stravaStatus");
-    const selected = Array.from(document.querySelectorAll("#stravaActivityList input[type='checkbox']:checked"))
-        .map(function (input) { return Number(input.value); })
-        .filter(Number.isFinite);
-
-    if (!accessToken) {
-        alert("Please log in before importing Strava activities.");
-        return;
-    }
-
-    if (!selected.length) {
-        alert("Please select at least one Strava activity to import.");
-        return;
-    }
-
-    if (status) status.textContent = "Importing selected Strava activities...";
-
-    try {
-        const response = await fetch(
-            SUPABASE_URL + "/functions/v1/strava-import",
-            {
-                method: "POST",
-                headers: {
-                    "Authorization": "Bearer " + accessToken,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ activity_ids: selected })
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || "Could not import Strava activities.");
-        }
-
-        const importedCount = Number(data.imported_count || 0);
-        const skippedCount = Number(data.skipped_count || 0);
-
-        if (status) {
-            status.textContent = importedCount + " activity" + (importedCount === 1 ? "" : "ies") + " imported" +
-                (skippedCount ? " · " + skippedCount + " skipped" : "") + ".";
-        }
-
-        await updateLogbookStats();
-        await loadYourVoyages();
-        await loadSailingMap();
-        await loadStravaActivities();
-
-    } catch (error) {
-        console.error("Strava import error:", error);
-        if (status) status.textContent = error.message || "Could not import Strava activities.";
-    }
-}
-
-/* ==================================================
    SECURITY
    ================================================== */
 
@@ -5199,18 +5007,6 @@ if (photoInput) {
 
 if (!checkPasswordReset()) {
         loadSailingClubs();
-        const stravaResult = new URLSearchParams(window.location.search).get("strava");
-        if (stravaResult === "connected") {
-            setTimeout(function () {
-                alert("Strava connected successfully. Open your Premium logbook to choose which activities to import.");
-                openLogbook();
-            }, 250);
-        } else if (stravaResult === "error") {
-            const reason = new URLSearchParams(window.location.search).get("message");
-            setTimeout(function () {
-                alert("Could not connect Strava" + (reason ? ": " + reason : "."));
-            }, 250);
-        }
 document.getElementById("verificationCheckbox").addEventListener("change", async function () {
     const checkbox = this;
     const premium = await getPremiumStatus();
