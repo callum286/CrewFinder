@@ -469,43 +469,11 @@ textarea:focus {
     font-weight:700;
 }
 
-.search-result {
-    position:relative;
-}
-
 .search-profile-header {
     display:flex;
     align-items:center;
     gap:14px;
     margin-bottom:8px;
-    padding-right:42px;
-}
-
-.verified-badge {
-    position:absolute;
-    top:18px;
-    right:18px;
-    width:22px;
-    height:22px;
-    border-radius:50%;
-    background:#1d9bf0;
-    border:2px solid #ffffff;
-    box-shadow:0 1px 3px rgba(0,0,0,.18);
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    user-select:none;
-    -webkit-user-select:none;
-    pointer-events:none;
-}
-
-.verified-badge::before {
-    content:"✓";
-    color:#ffffff;
-    font-size:13px;
-    line-height:1;
-    font-weight:800;
-    transform:translateY(-.5px);
 }
 
 .search-profile-photo {
@@ -1360,6 +1328,31 @@ footer {
 .nav-dropdown a:hover { background: #f1f7fa; color: #1683d8; }
 @media (max-width: 800px) { .nav-menu { margin-left: 0; } }
 
+
+.waypoint-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.waypoint-row input {
+    flex: 1;
+}
+
+.waypoint-remove {
+    padding: 10px 14px;
+    background: #f3f5f6;
+    color: #52616b;
+    border: 1px solid #dfe7ec;
+}
+
+@media (max-width: 600px) {
+    .waypoint-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
 </style>
 
 </head>
@@ -1610,6 +1603,8 @@ footer {
 
                 <div class="journey-fields">
                     <input type="text" id="voyageStart" placeholder="Start location e.g. Portsmouth">
+                    <div id="waypointsContainer"></div>
+                    <button type="button" class="button" onclick="addWaypoint()">+ Add waypoint</button>
                     <input type="text" id="voyageEnd" placeholder="End location e.g. Cowes">
                 </div>
 
@@ -3197,7 +3192,7 @@ async function loadSailingMap() {
             SUPABASE_URL +
             "/rest/v1/voyages?user_id=eq." +
             userId +
-            "&select=date,boat,location,start_location,end_location,miles&order=date.asc",
+            "&select=date,boat,location,start_location,end_location,waypoints,miles&order=date.asc",
             {
                 method: "GET",
                 headers: {
@@ -3218,14 +3213,27 @@ async function loadSailingMap() {
         for (const voyage of voyages) {
             if (!voyage.start_location || !voyage.end_location) continue;
 
-            const start = await geocodeLocation(voyage.start_location);
-            await new Promise(function(resolve) { setTimeout(resolve, 1100); });
-            const end = await geocodeLocation(voyage.end_location);
+            const routeLocations = [
+                voyage.start_location,
+                ...(Array.isArray(voyage.waypoints) ? voyage.waypoints : []),
+                voyage.end_location
+            ].filter(Boolean);
 
-            if (!start || !end) continue;
+            const routePoints = [];
 
-            const line = L.polyline(
-                [[start.lat, start.lng], [end.lat, end.lng]],
+            for (const routeLocation of routeLocations) {
+                const point = await geocodeLocation(routeLocation);
+                if (point) {
+                    routePoints.push([point.lat, point.lng]);
+                    points.push([point.lat, point.lng]);
+                }
+                await new Promise(function(resolve) { setTimeout(resolve, 1100); });
+            }
+
+            if (routePoints.length < 2) continue;
+
+            L.polyline(
+                routePoints,
                 { weight: 4, opacity: 0.8 }
             ).addTo(sailingMapLayer);
 
@@ -3936,11 +3944,37 @@ travel_distance: document.getElementById("travelDistance").value || null,
    FIND CREW
    ================================================== */
 
+    function addWaypoint() {
+        const container = document.getElementById("waypointsContainer");
+        if (!container) return;
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "waypoint-row";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "voyageWaypoint";
+        input.placeholder = "Waypoint location";
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "button waypoint-remove";
+        removeButton.textContent = "Remove";
+        removeButton.onclick = function () { wrapper.remove(); };
+
+        wrapper.appendChild(input);
+        wrapper.appendChild(removeButton);
+        container.appendChild(wrapper);
+    }
+
     async function addVoyage() {
     const date = document.getElementById("voyageDate").value;
     const boat = document.getElementById("voyageBoat").value.trim();
     const startLocation = document.getElementById("voyageStart").value.trim();
     const endLocation = document.getElementById("voyageEnd").value.trim();
+    const waypoints = Array.from(document.querySelectorAll(".voyageWaypoint"))
+        .map(function (input) { return input.value.trim(); })
+        .filter(Boolean);
     const location = document.getElementById("voyageLocation").value.trim();
     const miles = document.getElementById("voyageMiles").value;
     const notes = document.getElementById("voyageNotes").value.trim();
@@ -3988,6 +4022,7 @@ travel_distance: document.getElementById("travelDistance").value || null,
                     location: location,
                     start_location: startLocation,
                     end_location: endLocation,
+                    waypoints: waypoints,
                     miles: miles ? Number(miles) : null,
                     notes: notes
                 })
@@ -4173,8 +4208,8 @@ async function searchCrew() {
                         ${photoHtml}
                         <h3>
                             ${escapeHtml(firstName)} ${escapeHtml(lastName)}
+                            ${profile.verified ? '<span class="verified-badge">✓</span>' : ""}
                         </h3>
-                        ${profile.verified ? '<span class="verified-badge" title="CrewFinder Verified" aria-label="CrewFinder Verified"></span>' : ""}
                     </div>
 
                     <div class="location">
