@@ -469,11 +469,43 @@ textarea:focus {
     font-weight:700;
 }
 
+.search-result {
+    position:relative;
+}
+
 .search-profile-header {
     display:flex;
     align-items:center;
     gap:14px;
     margin-bottom:8px;
+    padding-right:42px;
+}
+
+.verified-badge {
+    position:absolute;
+    top:18px;
+    right:18px;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:#1d9bf0;
+    border:2px solid #ffffff;
+    box-shadow:0 1px 3px rgba(0,0,0,.18);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    user-select:none;
+    -webkit-user-select:none;
+    pointer-events:none;
+}
+
+.verified-badge::before {
+    content:"✓";
+    color:#ffffff;
+    font-size:13px;
+    line-height:1;
+    font-weight:800;
+    transform:translateY(-.5px);
 }
 
 .search-profile-photo {
@@ -3271,41 +3303,8 @@ async function loadFounderOffer() {
     }
 }
 
-async function startSubscription() {
-    const accessToken = localStorage.getItem("crewfinder_access_token");
-
-    if (!accessToken) {
-        alert("Please log in before joining CrewFinder Premium.");
-        showLogin();
-        return;
-    }
-
-    try {
-        const response = await fetch(
-            SUPABASE_URL + "/functions/v1/create-checkout",
-            {
-                method: "POST",
-                headers: {
-                    "Authorization": "Bearer " + accessToken,
-                    "Content-Type": "application/json"
-                }
-            }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok || !data.url) {
-            throw new Error(
-                data.error || "Could not start Premium checkout."
-            );
-        }
-
-        window.location.href = data.url;
-
-    } catch (error) {
-        console.error("Stripe checkout error:", error);
-        alert(error.message || "Could not start Premium checkout.");
-    }
+function startSubscription() {
+    alert("Subscription checkout is the next step. The Premium page is ready; we now need to connect a real payment provider so successful payments can unlock Premium securely.");
 }
 
 
@@ -4174,8 +4173,8 @@ async function searchCrew() {
                         ${photoHtml}
                         <h3>
                             ${escapeHtml(firstName)} ${escapeHtml(lastName)}
-                            ${profile.verified ? '<span class="verified-badge">✓</span>' : ""}
                         </h3>
+                        ${profile.verified ? '<span class="verified-badge" title="CrewFinder Verified" aria-label="CrewFinder Verified"></span>' : ""}
                     </div>
 
                     <div class="location">
